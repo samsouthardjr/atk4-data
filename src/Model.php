@@ -1235,7 +1235,7 @@ class Model implements \ArrayAccess, \IteratorAggregate
 
         if (is_string($field)) {
             // shorthand for adding conditions on references
-            // use chained reference names separated by dot "."
+            // use chained reference names separated by "/"
             if (stripos($field, '/') !== false) {
                 $references = explode('/', $field);
 
