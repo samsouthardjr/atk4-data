@@ -12,6 +12,9 @@ use atk4\data\Persistence;
 use atk4\dsql\Connection;
 use atk4\dsql\Expression;
 use atk4\dsql\Query;
+use atk4\data\Model\Scope\Condition;
+use atk4\data\Model\Scope\AbstractScope;
+use atk4\data\Model\Scope\Scope;
 
 /**
  * Persistence\SQL class.
@@ -451,6 +454,45 @@ class SQL extends Persistence
 
         return $q;
     }
+    
+    public function initScopeConditions(Model $model, Query $query, AbstractScope $scope = null): Query
+    {
+        $scope = $scope ?? $model->scope();
+        
+        if (!$scope || $scope->isEmpty()) {
+            return $query;
+        }
+
+        // simple condition
+        if ($scope instanceof Condition) {
+            $query = $query->where(...$scope->toArray());
+        }
+
+        // nested conditions
+        if ($scope instanceof Scope) {
+            if ($scope->isCompound()) {
+                if ($scope->getJunction() === Scope::OR) {
+                    $expression = $query->orExpr();
+                }
+                else {
+                    $expression = $query->andExpr();
+                }
+    
+                foreach ($scope->getActiveComponents() as $component) {
+                    $expression = $this->initScopeConditions($model, $expression, $component);
+                }
+    
+                $query = $query->where($expression);
+            }
+            else {
+                foreach ($scope->getActiveComponents() as $component) {
+                    $expression = $this->initScopeConditions($model, $query, $component);
+                }
+            }
+        }
+        
+        return $query;        
+    }
 
     /**
      * This is the actual field typecasting, which you can override in your
@@ -644,7 +686,7 @@ class SQL extends Persistence
 
             case 'delete':
                 $q->mode('delete');
-                $this->initQueryConditions($m, $q);
+                $this->initScopeConditions($m, $q);
                 $m->hook('initSelectQuery', [$q, $type]);
 
                 return $q;
@@ -654,7 +696,7 @@ class SQL extends Persistence
                 break;
 
             case 'count':
-                $this->initQueryConditions($m, $q);
+                $this->initScopeConditions($m, $q);
                 $m->hook('initSelectQuery', [$q]);
                 if (isset($args['alias'])) {
                     $q->reset('field')->field('count(*)', $args['alias']);
@@ -681,7 +723,7 @@ class SQL extends Persistence
                 } else {
                     $q->reset('field')->field($field);
                 }
-                $this->initQueryConditions($m, $q);
+                $this->initScopeConditions($m, $q);
                 $this->setLimitOrder($m, $q);
 
                 return $q;
@@ -697,7 +739,7 @@ class SQL extends Persistence
 
                 $fx = $args[0];
                 $field = is_string($args[1]) ? $m->getField($args[1]) : $args[1];
-                $this->initQueryConditions($m, $q);
+                $this->initScopeConditions($m, $q);
                 $m->hook('initSelectQuery', [$q, $type]);
 
                 if ($type == 'fx') {
@@ -723,7 +765,7 @@ class SQL extends Persistence
                 ]);
         }
 
-        $this->initQueryConditions($m, $q);
+        $this->initScopeConditions($m, $q);
         $this->setLimitOrder($m, $q);
         $m->hook('initSelectQuery', [$q, $type]);
 

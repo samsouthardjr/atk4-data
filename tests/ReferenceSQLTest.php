@@ -156,7 +156,7 @@ class ReferenceSQLTest extends \atk4\schema\PHPUnit_SchemaTestCase
 
         if ($this->driver == 'sqlite') {
             $this->assertEquals(
-                'select "id","name" from "user" where "id" in (select "user_id" from "order" where "amount" > :a and "amount" < :b)',
+                'select "id","name" from "user" where "id" in (select "user_id" from "order" where ("amount" > :a and "amount" < :b))',
                 $o->ref('user_id')->action('select')->render()
             );
         }

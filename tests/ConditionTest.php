@@ -30,14 +30,14 @@ class ConditionTest extends \atk4\core\PHPUnit_AgileTestCase
 
         $m->addCondition('gender', 'M');
 
-        $this->assertEquals(1, count($m->conditions));
+        $this->assertEquals(1, count($m->scope()->getActiveComponents()));
 
         $m->addCondition('gender', 'F');
 
-        $this->assertEquals(2, count($m->conditions));
+        $this->assertEquals(2, count($m->scope()->getActiveComponents()));
 
         $m->addCondition([['gender', 'F'], ['foo', 'bar']]);
-        $this->assertEquals(3, count($m->conditions));
+        $this->assertEquals(3, count($m->scope()->getActiveComponents()));
     }
 
     public function testEditableAfterCondition()
@@ -45,6 +45,7 @@ class ConditionTest extends \atk4\core\PHPUnit_AgileTestCase
         $m = new Model();
         $m->addField('name');
         $m->addField('gender');
+
         $m->addCondition('gender', 'M');
 
         $this->assertEquals(true, $m->getField('gender')->system);
