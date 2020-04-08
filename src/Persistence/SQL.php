@@ -395,8 +395,8 @@ class SQL extends Persistence
     /**
      * Will apply scope defined inside $scope or $model->scope() onto $query.
      *
-     * @param Model $model
-     * @param Query $query
+     * @param Model         $model
+     * @param Query         $query
      * @param AbstractScope $scope
      *
      * @return Query
@@ -1021,7 +1021,7 @@ class SQL extends Persistence
             ], null, $e);
         }
     }
-    
+
     /**
      * Last ID inserted.
      *
