@@ -1021,6 +1021,18 @@ class SQL extends Persistence
             ], null, $e);
         }
     }
+    
+    /**
+     * Last ID inserted.
+     *
+     * @param Model $model
+     *
+     * @return mixed
+     */
+    public function lastInsertId(Model $model = null)
+    {
+        return $this->connection->lastInsertID($model);
+    }
 
     public function getFieldSQLExpression(Field $field, Expression $expression)
     {

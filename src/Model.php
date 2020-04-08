@@ -1603,14 +1603,8 @@ class Model implements \ArrayAccess, \IteratorAggregate
      */
     public function tryLoad($id)
     {
-        if (!$this->persistence) {
-            throw new Exception(['Model is not associated with any database']);
-        }
-
-        if (!$this->persistence->hasMethod('tryLoad')) {
-            throw new Exception('Persistence does not support tryLoad()');
-        }
-
+        $this->checkPersistence('tryLoad');
+        
         if ($this->loaded()) {
             $this->unload();
         }
@@ -1639,13 +1633,7 @@ class Model implements \ArrayAccess, \IteratorAggregate
      */
     public function loadAny()
     {
-        if (!$this->persistence) {
-            throw new Exception(['Model is not associated with any database']);
-        }
-
-        if (!$this->persistence->hasMethod('loadAny')) {
-            throw new Exception('Persistence does not support loadAny()');
-        }
+        $this->checkPersistence('loadAny');
 
         if ($this->loaded()) {
             $this->unload();
@@ -1678,14 +1666,8 @@ class Model implements \ArrayAccess, \IteratorAggregate
      */
     public function tryLoadAny()
     {
-        if (!$this->persistence) {
-            throw new Exception(['Model is not associated with any database']);
-        }
-
-        if (!$this->persistence->hasMethod('tryLoadAny')) {
-            throw new Exception('Persistence does not support tryLoadAny()');
-        }
-
+        $this->checkPersistence('tryLoadAny');
+        
         if ($this->loaded()) {
             $this->unload();
         }
@@ -1792,6 +1774,24 @@ class Model implements \ArrayAccess, \IteratorAggregate
         $field_name->default = $default;
 
         return $this;
+    }
+    
+    /**
+     * Check if model has persistence with specified method.
+     * 
+     * @param string $method
+     * 
+     * @throws Exception
+     */
+    public function checkPersistence(?string $method = null)
+    {
+        if (!$this->persistence) {
+            throw new Exception(['Model is not associated with any persistence']);
+        }
+        
+        if ($method && !$this->persistence->hasMethod($method)) {
+            throw new Exception("Persistence does not support $method method");
+        }
     }
 
     /**
@@ -2025,10 +2025,8 @@ class Model implements \ArrayAccess, \IteratorAggregate
      */
     public function export($fields = null, $key_field = null, $typecast_data = true)
     {
-        if (!$this->persistence->hasMethod('export')) {
-            throw new Exception('Persistence does not support export()');
-        }
-
+        $this->checkPersistence('export');
+        
         // no key field - then just do export
         if ($key_field === null) {
             return $this->persistence->export($this, $fields, $typecast_data);
@@ -2257,14 +2255,8 @@ class Model implements \ArrayAccess, \IteratorAggregate
      */
     public function action($mode, $args = [])
     {
-        if (!$this->persistence) {
-            throw new Exception(['action() requires model to be associated with db']);
-        }
-
-        if (!$this->persistence->hasMethod('action')) {
-            throw new Exception('Persistence does not support action()');
-        }
-
+        $this->checkPersistence('action');
+        
         return $this->persistence->action($this, $mode, $args);
     }
 
@@ -2602,11 +2594,9 @@ class Model implements \ArrayAccess, \IteratorAggregate
      */
     public function lastInsertID()
     {
-        if (isset($this->persistence) && $this->persistence instanceof Persistence\SQL) {
-            return $this->persistence->connection->lastInsertId($this);
-        }
-
-        throw new Exception('Model is not associated with SQL-enabled persistence');
+        $this->checkPersistence('lastInsertId');
+        
+        return $this->persistence->lastInsertId($this);
     }
 
     // }}}
