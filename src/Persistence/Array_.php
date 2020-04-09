@@ -21,7 +21,7 @@ class Array_ extends Persistence
      * @var array
      */
     public $data;
-    
+
     /**
      * Array of last inserted ids.
      *
@@ -42,7 +42,7 @@ class Array_ extends Persistence
     /**
      * Associate model with the data driver.
      *
-     * @param Model|string $model        Model which will use this persistence
+     * @param Model|string $model    Model which will use this persistence
      * @param array        $defaults Properties
      *
      * @return Model
@@ -199,7 +199,7 @@ class Array_ extends Persistence
         $data = $this->typecastSaveRow($model, $data);
 
         $this->data[$table][$id] = array_merge($this->data[$table][$id] ?? [], $data);
-        
+
         return $id;
     }
 
@@ -241,21 +241,21 @@ class Array_ extends Persistence
             case 'integer':
                 $id = count($ids) === 0 ? 1 : (max($ids) + 1);
                 break;
-                
+
             case 'string':
                 $id = uniqid();
                 break;
-                
+
             default:
                 throw new Exception([
                     'Unsupported id field type. Array supports type=integer or type=string only',
                     'type' => $type,
                 ]);
         }
-        
+
         return $this->lastInsertIds[$table] = $id;
     }
-    
+
     /**
      * Last ID inserted.
      *
@@ -313,13 +313,13 @@ class Array_ extends Persistence
     public function initAction(Model $model, $fields = null)
     {
         $data = $this->data[$model->table];
-        
+
         if ($keys = array_flip((array) $fields)) {
             $data = array_map(function ($row) use ($model, $keys) {
                 return array_intersect_key($row, $keys);
             }, $data);
         }
-        
+
         return new \atk4\data\Action\Iterator($data);
     }
 

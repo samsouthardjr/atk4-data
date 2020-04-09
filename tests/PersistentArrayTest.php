@@ -370,7 +370,7 @@ class PersistentArrayTest extends \atk4\core\PHPUnit_AgileTestCase
         $this->assertEquals($a['countries'][9], $result[9]);
         unset($result);
         $m->unload();
-        
+
         // case : str% NOT LIKE
         $m->scope()->clear();
         $m->addCondition('country', 'NOT LIKE', 'La%');
@@ -436,7 +436,7 @@ class PersistentArrayTest extends \atk4\core\PHPUnit_AgileTestCase
         $m->addCondition('active', 'LIKE', '%ABC%');
         $this->assertEquals(0, count($m->export()));
     }
-    
+
     /**
      * Test Model->addCondition operator REGEXP.
      */
@@ -479,7 +479,7 @@ class PersistentArrayTest extends \atk4\core\PHPUnit_AgileTestCase
         $this->assertEquals($a['countries'][6], $result[6]);
         unset($result);
         $m->unload();
-        
+
         $m->scope()->clear();
         $m->addCondition('country', 'NOT REGEXP', 'Ireland|UK|Latvia');
         $result = $m->action('select')->get();
