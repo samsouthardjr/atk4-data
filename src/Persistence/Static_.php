@@ -5,9 +5,7 @@
 namespace atk4\data\Persistence;
 
 use atk4\data\Exception;
-use atk4\data\Field;
 use atk4\data\Model;
-use atk4\data\Persistence;
 
 /**
  * Implements a very basic array-access pattern:.
@@ -137,22 +135,22 @@ class Static_ extends Array_
      * Automatically adds missing model fields.
      * Called from AfterAdd hook.
      *
-     * @param Persistence_Static $p
-     * @param Model              $m
+     * @param Static_ $persistence
+     * @param Model              $model
      */
-    public function afterAdd($p, $m)
+    public function afterAdd(Static_ $persistence, Model $model)
     {
-        if ($p->titleForModel) {
-            $m->title_field = $p->titleForModel;
+        if ($persistence->titleForModel) {
+            $model->title_field = $persistence->titleForModel;
         }
 
         foreach ($this->fieldsForModel as $field=>$def) {
-            if ($m->hasField($field)) {
+            if ($model->hasField($field)) {
                 continue;
             }
 
             // add new field
-            $m->addField($field, $def);
+            $model->addField($field, $def);
         }
     }
 }
