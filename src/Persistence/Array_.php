@@ -24,7 +24,7 @@ class Array_ extends Persistence
 
     /**
      * Array of last inserted ids per table.
-     * Last inserted ID for any table is stored under '$' key
+     * Last inserted ID for any table is stored under '$' key.
      *
      * @var array
      */
@@ -231,11 +231,11 @@ class Array_ extends Persistence
         $table = $table ?? $model->table;
 
         $type = $model->id_field ? $model->getField($model->id_field)->type : 'integer';
-        
+
         switch ($type) {
             case 'integer':
                 $ids = $model->id_field ? array_keys($this->data[$table]) : [count($this->data[$table])];
-                
+
                 $id = $ids ? max($ids) + 1 : 1;
                 break;
 
@@ -255,7 +255,7 @@ class Array_ extends Persistence
 
     /**
      * Last ID inserted.
-     * Last inserted ID for any table is stored under '$' key
+     * Last inserted ID for any table is stored under '$' key.
      *
      * @param Model $model
      *
@@ -266,7 +266,7 @@ class Array_ extends Persistence
         if ($model) {
             return $this->lastInsertIds[$model->table] ?? null;
         }
-        
+
         return $this->lastInsertIds['$'] ?? null;
     }
 
