@@ -635,7 +635,7 @@ class SQL extends Persistence
             case 'count':
                 $this->initQueryConditions($m, $q);
                 $m->hook('initSelectQuery', [$q]);
-                
+
                 return $q->reset('field')->field('count(*)', $args['alias'] ?? null);
 
             case 'field':
