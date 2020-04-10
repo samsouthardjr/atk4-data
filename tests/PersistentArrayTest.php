@@ -172,6 +172,9 @@ class PersistentArrayTest extends \atk4\core\PHPUnit_AgileTestCase
                 3 => ['name' => 'Foo', 'surname' => 'Bar', 'id' => 3],
             ],
         ], $a);
+
+        $this->assertEquals(3, $m->lastInsertID());
+        $this->assertEquals(3, $p->lastInsertID());
     }
 
     public function testIterator()
