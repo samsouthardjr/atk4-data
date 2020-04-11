@@ -1588,9 +1588,9 @@ class Model implements \ArrayAccess, \IteratorAggregate
         $model->data = $this->data;
         $model->dirty = $this->dirty;
         $model->limit = $this->limit;
-        $model->setOrder($this->order);        
-        $model->add(clone $this->scope);        
-        
+        $model->setOrder($this->order);
+        $model->add(clone $this->scope);
+
         return $model;
     }
 
