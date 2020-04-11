@@ -1562,35 +1562,36 @@ class Model implements \ArrayAccess, \IteratorAggregate
      *
      * @return $this
      */
-    public function withPersistence($persistence, $id = null, string $class = null)
+    public function withPersistence(Persistence $persistence, $id = null, string $class = null)
     {
-        if (!$persistence instanceof Persistence) {
-            throw new Exception([
-                'Please supply valid persistence',
-                'arg' => $persistence,
-            ]);
-        }
+        $class = $class ?: get_class($this);
 
-        if (!$class) {
-            $class = get_class($this);
-        }
-
-        $m = new $class($persistence);
+        $model = new $class($persistence, $this->table);
 
         if ($this->id_field) {
             if ($id === true) {
-                $m->id = $this->id;
-                $m[$m->id_field] = $this[$this->id_field];
+                $model->id = $this->id;
+                $model[$model->id_field] = $this[$this->id_field];
             } elseif ($id) {
-                $m->id = null; // record shouldn't exist yet
-                $m[$m->id_field] = $id;
+                $model->id = null; // record shouldn't exist yet
+                $model[$model->id_field] = $id;
             }
         }
 
-        $m->data = $this->data;
-        $m->dirty = $this->dirty;
+        // include any fields defined inline
+        foreach ($this->fields as $name => $field) {
+            if (!$model->hasField($name)) {
+                $model->addField($name, clone $field);
+            }
+        }
 
-        return $m;
+        $model->data = $this->data;
+        $model->dirty = $this->dirty;
+        $model->limit = $this->limit;
+        $model->setOrder($this->order);        
+        $model->add(clone $this->scope);        
+        
+        return $model;
     }
 
     /**
