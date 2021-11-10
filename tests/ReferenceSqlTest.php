@@ -733,6 +733,7 @@ class Child extends Model
     protected function init(): void
     {
         parent::init();
-        $this->hasOne('parent_id', ['model' => [Par::class]]);
+        $j = $this->join('jointable');
+        $j->hasOne('parent_id', ['model' => [Par::class]]);
     }
 }
