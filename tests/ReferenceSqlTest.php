@@ -692,4 +692,44 @@ class ReferenceSqlTest extends TestCase
         $order_UserRef->addField('some_other_number', ['type' => 'string']);
         $this->assertSame('string', $order->getField('some_other_number')->type);
     }
+
+    public function testRefJoinUpdate()
+    {
+        $this->createMigrator(new Par($this->db))->create();
+        $this->createMigrator(new Child($this->db))->create();
+
+        $p = new Par($this->db);
+        $e = $p->createEntity();
+        $e->save(['name' => 'foo']);
+        $e2 = $e->ref('children')->createEntity();
+        $e2->save();
+
+        $deleteAction = $e->ref('children')->action('delete');
+        var_dump($deleteAction->getDebugQuery());
+        $deleteAction->execute();
+    }
+}
+
+class Par extends Model
+{
+    public $table = 'parent';
+
+    protected function init(): void
+    {
+        parent::init();
+        $this->addField('name');
+        $this->hasMany('children', ['model' => [Child::class]]);
+    }
+}
+
+class Child extends Model
+{
+    public $table = 'child';
+
+    protected function init(): void
+    {
+        parent::init();
+        $j = $this->join('jointable');
+        $j->hasOne('parent_id', ['model' => [Par::class]]);
+    }
 }
