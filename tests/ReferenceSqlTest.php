@@ -695,18 +695,22 @@ class ReferenceSqlTest extends TestCase
 
     public function testRefJoinUpdate()
     {
-        $this->createMigrator(new Par($this->db))->create();
-        $this->createMigrator(new Child($this->db))->create();
+        $this->debug = true;
+        try {
+            $this->createMigrator(new Par($this->db))->create();
+            $this->createMigrator(new Child($this->db))->create();
 
-        $p = new Par($this->db);
-        $e = $p->createEntity();
-        $e->save(['name' => 'foo']);
-        $e2 = $e->ref('children')->createEntity();
-        $e2->save();
+            $p = new Par($this->db);
+            $e = $p->createEntity();
+            $e->save(['name' => 'foo']);
+            $e2 = $e->ref('children')->createEntity();
+            $e2->save();
 
-        $deleteAction = $e->ref('children')->action('delete');
-        var_dump($deleteAction->getDebugQuery());
-        $deleteAction->execute();
+            $deleteAction = $e->ref('children')->action('delete');
+            $deleteAction->execute();
+        } finally {
+            $this->debug = false;
+        }
     }
 }
 
@@ -729,7 +733,6 @@ class Child extends Model
     protected function init(): void
     {
         parent::init();
-        $j = $this->join('jointable');
-        $j->hasOne('parent_id', ['model' => [Par::class]]);
+        $this->hasOne('parent_id', ['model' => [Par::class]]);
     }
 }
