@@ -10,6 +10,37 @@ use Atk4\Data\Model;
 class HasOneSql extends HasOne
 {
     /**
+     * WARNING: returned model can have invalid reference (guarded) values.
+     *
+     * @return mixed
+     */
+    protected function guardOwnerSeedRefRecursion(\Closure $fx)
+    {
+        $ownerElementsBackup = $this->getOwner()->getModel(true)->elements;
+        try {
+            $ownerCloned = null;
+            foreach ($ownerElementsBackup as $k => $v) {
+                if (str_starts_with($k, '#ref_') && is_array($v->model) && $v->model[0] === get_class($this->getOwner())) {
+                    if ($ownerCloned === null) {
+                        $ownerCloned = clone $this->getOwner();
+                    }
+
+                    $refCloned = clone $v;
+                    $refCloned->unsetOwner();
+                    $refCloned->setOwner($ownerCloned);
+                    $refCloned->model = $ownerCloned;
+
+                    $this->getOwner()->getModel(true)->elements[$k] = $refCloned;
+                }
+            }
+
+            return $fx();
+        } finally {
+            $this->getOwner()->getModel(true)->elements = $ownerElementsBackup;
+        }
+    }
+
+    /**
      * Creates expression which sub-selects a field inside related model.
      */
     public function addField(string $fieldName, string $theirFieldName = null, array $defaults = []): SqlExpressionField
@@ -21,19 +52,21 @@ class HasOneSql extends HasOne
         $ourModel = $this->getOurModel(null);
 
         // if caption/type is not defined in $defaults -> get it directly from the linked model field $theirFieldName
-        $refModelField = $ourModel->refModel($this->link)->getField($theirFieldName);
-        $defaults['type'] ??= $refModelField->type;
-        $defaults['enum'] ??= $refModelField->enum;
-        $defaults['values'] ??= $refModelField->values;
-        $defaults['caption'] ??= $refModelField->caption;
-        $defaults['ui'] ??= $refModelField->ui;
+        $theirFieldGuarded = $this->guardOwnerSeedRefRecursion(fn () => $ourModel->refModel($this->link))->getField($theirFieldName);
+        $defaults['type'] ??= $theirFieldGuarded->type;
+        $defaults['enum'] ??= $theirFieldGuarded->enum;
+        $defaults['values'] ??= $theirFieldGuarded->values;
+        $defaults['caption'] ??= $theirFieldGuarded->caption;
+        $defaults['ui'] ??= $theirFieldGuarded->ui;
 
         $fieldExpression = $ourModel->addExpression($fieldName, array_merge(
             [
                 function (Model $ourModel) use ($theirFieldName) {
+                    $theirModel = $ourModel->refLink($this->link);
+
                     // remove order if we just select one field from hasOne model
                     // that is mandatory for Oracle
-                    return $ourModel->refLink($this->link)->action('field', [$theirFieldName])->reset('order');
+                    return $theirModel->action('field', [$theirFieldName])->reset('order');
                 },
             ],
             $defaults,
@@ -150,44 +183,20 @@ class HasOneSql extends HasOne
     {
         $ourModel = $this->getOurModel(null);
 
-        $fieldName = $defaults['field'] ?? preg_replace('~_(' . preg_quote($ourModel->id_field, '~') . '|id)$~', '', $this->link);
+        $ourFieldName = $defaults['field'] ?? preg_replace('~_(' . preg_quote($ourModel->id_field, '~') . '|id)$~', '', $this->link);
 
-        $fieldExpression = $ourModel->addExpression($fieldName, array_replace_recursive(
-            [
-                function (Model $ourModel) {
-                    $theirModel = $ourModel->refLink($this->link);
+        $theirFieldGuarded = $this->guardOwnerSeedRefRecursion(fn () => $ourModel->refModel($this->link));
+        $theirFieldName = $theirFieldGuarded->title_field;
 
-                    return $theirModel->action('field', [$theirModel->title_field])->reset('order');
-                },
-                'type' => null,
-                'ui' => ['editable' => false, 'visible' => true],
-            ],
-            $defaults,
-            [
-                // to be able to change title field, but not save it
-                // afterSave hook will take care of the rest
-                'read_only' => false,
-                'never_save' => true,
-            ]
-        ));
+        $defaults['ui'] = array_merge(['editable' => false, 'visible' => true], $defaults['ui'] ?? []);
 
-        // Will try to execute last
-        $this->onHookToOurModel($ourModel, Model::HOOK_BEFORE_SAVE, function (Model $ourModel) use ($fieldName) {
-            // if title field is changed, but reference ID field (our_field)
-            // is not changed, then update reference ID field value
-            if ($ourModel->isDirty($fieldName) && !$ourModel->isDirty($this->our_field)) {
-                $theirModel = $this->createTheirModel();
-
-                $theirModel->addCondition($theirModel->title_field, $ourModel->get($fieldName));
-                $ourModel->set($this->getOurFieldName(), $theirModel->action('field', [$theirModel->id_field]));
-            }
-        }, [], 20);
+        $field = $this->addField($ourFieldName, $theirFieldName, $defaults);
 
         // Set ID field as not visible in grid by default
         if (!array_key_exists('visible', $this->getOurField()->ui)) {
             $this->getOurField()->ui['visible'] = false;
         }
 
-        return $fieldExpression;
+        return $field;
     }
 }

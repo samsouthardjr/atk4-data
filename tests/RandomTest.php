@@ -67,7 +67,7 @@ class Model_Item3 extends Model
         $this->addField('name');
         $this->addField('age');
         $i2 = $this->join('item2.item_id');
-        $i2->hasOne('parent_item_id', ['model' => $m, 'table_alias' => 'parent'])
+        $i2->hasOne('parent_item_id', ['model' => [self::class], 'table_alias' => 'parent'])
             ->addTitle();
 
         $this->hasMany('Child', ['model' => $m, 'their_field' => 'parent_item_id', 'table_alias' => 'child'])

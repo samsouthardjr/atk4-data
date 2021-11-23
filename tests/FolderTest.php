@@ -53,7 +53,7 @@ class FolderTest extends TestCase
             'count' => 3,
             'parent_id' => 1,
             'parent' => 'Desktop',
-            'is_deleted' => 0,
+            'is_deleted' => false,
         ], $f->get());
     }
 }
