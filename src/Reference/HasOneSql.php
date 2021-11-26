@@ -31,9 +31,11 @@ class HasOneSql extends HasOne
         $fieldExpression = $ourModel->addExpression($fieldName, array_merge(
             [
                 function (Model $ourModel) use ($theirFieldName) {
+                    $theirModel = $ourModel->refLink($this->link);
+
                     // remove order if we just select one field from hasOne model
                     // that is mandatory for Oracle
-                    return $ourModel->refLink($this->link)->action('field', [$theirFieldName])->reset('order');
+                    return $theirModel->action('field', [$theirFieldName])->reset('order');
                 },
             ],
             $defaults,
