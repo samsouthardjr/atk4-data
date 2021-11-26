@@ -6,6 +6,7 @@ namespace Atk4\Data\Model;
 
 use Atk4\Data\Field;
 use Atk4\Data\Model;
+use Atk4\Data\Model\Phpstan\IsEntity;
 
 /**
  * @template-covariant TModel of Model
@@ -13,13 +14,13 @@ use Atk4\Data\Model;
  */
 class EntityFieldPair
 {
-    /** @var TModel */
+    /** @var TModel&IsEntity */
     private $entity;
     /** @var string */
     private $fieldName;
 
     /**
-     * @phpstan-param TModel $entity
+     * @phpstan-param TModel&IsEntity $entity
      */
     public function __construct(Model $entity, string $fieldName)
     {
@@ -38,7 +39,7 @@ class EntityFieldPair
     }
 
     /**
-     * @phpstan-return TModel
+     * @phpstan-return TModel&IsEntity
      */
     public function getEntity(): Model
     {
