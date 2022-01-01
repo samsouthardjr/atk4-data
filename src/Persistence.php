@@ -77,8 +77,8 @@ abstract class Persistence
             throw new Exception('Persistence already set');
         }
 
-        $model->persistence = $this;
         $model->persistence_data = [];
+        $model->persistence = $this;
         $this->initPersistence($model);
 
         // invokes Model::init()

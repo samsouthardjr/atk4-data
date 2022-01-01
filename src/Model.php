@@ -130,13 +130,8 @@ class Model implements \IteratorAggregate
     /** @var Persistence|Persistence\Sql|null */
     public $persistence;
 
-    /**
-     * Persistence store some custom information in here that may be useful
-     * for them. The key is the name of persistence driver.
-     *
-     * @var array
-     */
-    public $persistence_data = [];
+    /** @var array Persistence store some custom information in here that may be useful for them. */
+    public $persistence_data;
 
     /** @var Model\Scope\RootScope */
     private $scope;
@@ -301,6 +296,10 @@ class Model implements \IteratorAggregate
 
         if ($persistence !== null) {
             $persistence->add($this);
+        }
+
+        if ($this->persistence === null) {
+            unset($this->{'persistence'});
         }
     }
 
@@ -1970,6 +1969,10 @@ class Model implements \IteratorAggregate
             return isset($model->{$name});
         }
 
+        if ($name === 'persistence' && !isset($this->persistence)) {
+            return isset($this->persistence);
+        }
+
         return $this->__di_isset($name);
     }
 
@@ -1986,6 +1989,12 @@ class Model implements \IteratorAggregate
 
         if ($this->isEntity() && isset($model->getModelOnlyProperties()[$name])) {
             return $model->{$name};
+        }
+
+        if ($name === 'persistence' && !isset($this->persistence)) {
+            $res = null;
+
+            return $res;
         }
 
         return $this->__di_get($name);
@@ -2008,6 +2017,19 @@ class Model implements \IteratorAggregate
             $this->assertIsModel();
         }
 
+        if ($name === 'persistence' && !isset($this->persistence)) {
+            Persistence::assertInstanceOf($value);
+
+            if ($this->persistence_data === null) {
+                $this->persistence = null;
+                $value->add($this);
+            } else {
+                $this->persistence = $value;
+            }
+
+            return;
+        }
+
         $this->__di_set($name, $value);
     }
 
@@ -2022,6 +2044,12 @@ class Model implements \IteratorAggregate
         }
 
         if ($this->isEntity() && isset($model->getModelOnlyProperties()[$name])) {
+            if ($name === 'persistence' && !isset($this->persistence)) {
+                unset($this->{'persistence'});
+
+                return;
+            }
+
             $this->assertIsModel();
         }
 
