@@ -44,8 +44,8 @@ class WithTest extends TestCase
 
         // tests
         $this->assertSameSql(
-            'with "i" ("user_id", "invoiced") as (select "user_id", "net" from "invoice" where "net" > :a)' . "\n"
-                . 'select "user"."id", "user"."name", "user"."salary", "_i"."invoiced" from "user" inner join "i" "_i" on "_i"."user_id" = "user"."id"',
+            'with "i" ("user_id", "invoiced") as (select "user_id", "net" from (select "id", "net", "user_id" from "invoice") "_tm" where "net" > :a)' . "\n"
+                . 'select "_tm"."id", "_tm"."name", "_tm"."salary", "_i"."invoiced" from (select "id", "name", "salary" from "user") "_tm" inner join "i" "_i" on "_i"."user_id" = "_tm"."id"',
             $m->action('select')->render()[0]
         );
 

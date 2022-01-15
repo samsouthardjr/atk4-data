@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Atk4\Data\Tests;
 
 use Atk4\Data\Exception;
-use Atk4\Data\Model;
 use Atk4\Data\Model2;
 use Atk4\Data\Schema\TestCase;
 
@@ -99,11 +98,11 @@ class ReferenceTest extends TestCase
     {
         $order = new Model2($this->db, ['table' => 'order']);
         $order->addRef('archive', ['model' => function ($m) {
-            return new $m(null, ['table' => $m->table . '_archive']);
+            return new $m(null, ['table' => $m->table->table . '_archive']);
         }]);
         $this->expectException(Exception::class);
         $order->addRef('archive', ['model' => function ($m) {
-            return new $m(null, ['table' => $m->table . '_archive']);
+            return new $m(null, ['table' => $m->table->table . '_archive']);
         }]);
     }
 
@@ -111,9 +110,9 @@ class ReferenceTest extends TestCase
     {
         $m = new Model2($this->db, ['table' => 'user']);
         $m->addRef('archive', ['model' => function ($m) {
-            return new $m(null, ['table' => $m->table . '_archive']);
+            return new $m(null, ['table' => $m->table->table . '_archive']);
         }]);
 
-        $this->assertSame('user_archive', $m->ref('archive')->table);
+        $this->assertSame('user_archive', $m->ref('archive')->table->table);
     }
 }

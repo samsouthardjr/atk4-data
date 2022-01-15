@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Atk4\Data\Tests;
 
-use Atk4\Data\Model;
 use Atk4\Data\Model2;
 use Atk4\Data\Schema\TestCase;
 use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
@@ -57,7 +56,7 @@ class ReferenceSqlTest extends TestCase
         $oo = $u->addCondition('id', '>', '1')->ref('Orders');
 
         $this->assertSameSql(
-            'select "id", "amount", "user_id" from "order" "_O_7442e29d7d53" where "user_id" in (select "id" from "user" where "id" > :a)',
+            'select "id", "amount", "user_id" from (select "id", "amount", "user_id" from "order") "_O_7442e29d7d53" where "user_id" in (select "id" from (select "id", "name" from "user") "_tm" where "id" > :a)',
             $oo->action('select')->render()[0]
         );
     }
@@ -73,7 +72,7 @@ class ReferenceSqlTest extends TestCase
         $u->hasMany('Orders', ['model' => $o]);
 
         $this->assertSameSql(
-            'select "id", "amount", "user_id" from "order" "_O_7442e29d7d53" where "user_id" = "user"."id"',
+            'select "id", "amount", "user_id" from (select "id", "amount", "user_id" from "order") "_O_7442e29d7d53" where "user_id" = "_tm"."id"',
             $u->refLink('Orders')->action('select')->render()[0]
         );
     }
@@ -114,7 +113,7 @@ class ReferenceSqlTest extends TestCase
         $u->hasMany('cur', ['model' => $c, 'our_field' => 'currency_code', 'their_field' => 'code']);
 
         $this->assertSameSql(
-            'select "id", "code", "name" from "currency" "_c_b5fddf1ef601" where "code" = "user"."currency_code"',
+            'select "id", "code", "name" from (select "id", "code", "name" from "currency") "_c_b5fddf1ef601" where "code" = "_tm"."currency_code"',
             $u->refLink('cur')->action('select')->render()[0]
         );
     }
@@ -153,7 +152,7 @@ class ReferenceSqlTest extends TestCase
         $o->addCondition('amount', '<', 9);
 
         $this->assertSameSql(
-            'select "id", "name" from "user" "_u_e8701ad48ba0" where "id" in (select "user_id" from "order" where ("amount" > :a and "amount" < :b))',
+            'select "id", "name" from (select "id", "name" from "user") "_u_e8701ad48ba0" where "id" in (select "user_id" from (select "id", "amount", "user_id" from "order") "_tm" where ("amount" > :a and "amount" < :b))',
             $o->ref('user_id')->action('select')->render()[0]
         );
     }
@@ -225,7 +224,7 @@ class ReferenceSqlTest extends TestCase
         $i->addExpression('total_net', ['expr' => $i->refLink('line')->action('fx', ['sum', 'total_net'])]);
 
         $this->assertSameSql(
-            'select "id", "ref_no", (select sum("total_net") from "invoice_line" "_l_6438c669e0d0" where "invoice_id" = "invoice"."id") "total_net" from "invoice"',
+            'select "id", "ref_no", (select sum("total_net") from (select "id", "invoice_id", "total_net", "total_vat", "total_gross" from "invoice_line") "_l_6438c669e0d0" where "invoice_id" = "_tm"."id") "total_net" from (select "id", "ref_no" from "invoice") "_tm"',
             $i->action('select')->render()[0]
         );
     }
@@ -494,7 +493,7 @@ class ReferenceSqlTest extends TestCase
         $user = new Model2($this->db, ['table' => 'user']);
         $user->hasMany('Orders', ['model' => [Model2::class, 'table' => 'order'], 'their_field' => 'id']);
         $o = $user->ref('Orders');
-        $this->assertSame('order', $o->table);
+        $this->assertSame('order', $o->table->table);
     }
 
     /**
