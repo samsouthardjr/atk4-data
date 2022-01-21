@@ -6,6 +6,7 @@ namespace Atk4\Data\Tests;
 
 use Atk4\Data\Exception;
 use Atk4\Data\Model;
+use Atk4\Data\Model2;
 use Atk4\Data\Schema\TestCase;
 
 class LimitOrderTest extends TestCase
@@ -20,7 +21,7 @@ class LimitOrderTest extends TestCase
             ],
         ]);
 
-        $i = (new Model($this->db, ['table' => 'invoice']))->addFields(['total_net', 'total_vat']);
+        $i = (new Model2($this->db, ['table' => 'invoice']))->addFields(['total_net', 'total_vat']);
         $i->addExpression('total_gross', ['expr' => '[total_net] + [total_vat]']);
         $i->getField($i->id_field)->system = false;
         $i->id_field = null;
@@ -44,7 +45,7 @@ class LimitOrderTest extends TestCase
             ],
         ]);
 
-        $ii = (new Model($this->db, ['table' => 'invoice']))->addFields(['total_net', 'total_vat']);
+        $ii = (new Model2($this->db, ['table' => 'invoice']))->addFields(['total_net', 'total_vat']);
         $ii->addExpression('total_gross', ['expr' => '[total_net] + [total_vat]']);
         $ii->getField($ii->id_field)->system = false;
         $ii->id_field = null;
@@ -96,7 +97,7 @@ class LimitOrderTest extends TestCase
             ],
         ]);
 
-        $ii = (new Model($this->db, ['table' => 'invoice']))->addFields(['net', 'vat']);
+        $ii = (new Model2($this->db, ['table' => 'invoice']))->addFields(['net', 'vat']);
         $ii->getField($ii->id_field)->system = false;
         $ii->id_field = null;
 
@@ -142,7 +143,7 @@ class LimitOrderTest extends TestCase
         ]);
 
         // order by expression field
-        $i = (new Model($this->db, ['table' => 'invoice']))->addFields(['code', 'net', 'vat']);
+        $i = (new Model2($this->db, ['table' => 'invoice']))->addFields(['code', 'net', 'vat']);
         $i->addExpression('gross', ['expr' => '[net] + [vat]']);
         $i->getField($i->id_field)->system = false;
         $i->id_field = null;
@@ -207,7 +208,7 @@ class LimitOrderTest extends TestCase
             ],
         ]);
 
-        $i = (new Model($this->db, ['table' => 'invoice']))->addFields(['net']);
+        $i = (new Model2($this->db, ['table' => 'invoice']))->addFields(['net']);
         $i->setOrder(new \DateTime()); // @phpstan-ignore-line
         $this->expectException(Exception::class);
         $i->export(); // executes query and throws exception because of DateTime object
@@ -223,7 +224,7 @@ class LimitOrderTest extends TestCase
             ],
         ]);
 
-        $i = (new Model($this->db, ['table' => 'invoice']))->addFields(['total_net', 'total_vat']);
+        $i = (new Model2($this->db, ['table' => 'invoice']))->addFields(['total_net', 'total_vat']);
         $i->addExpression('total_gross', ['expr' => '[total_net] + [total_vat]']);
         $i->getField($i->id_field)->system = false;
         $i->id_field = null;

@@ -6,6 +6,7 @@ namespace Atk4\Data\Tests;
 
 use Atk4\Data\Exception;
 use Atk4\Data\Model;
+use Atk4\Data\Model2;
 use Atk4\Data\Schema\TestCase;
 
 class IteratorTest extends TestCase
@@ -15,7 +16,7 @@ class IteratorTest extends TestCase
      */
     public function testException1(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addFields(['name', 'salary']);
         $this->expectException(Exception::class);
         $m->setOrder(['name', 'salary'], 'desc');
@@ -26,7 +27,7 @@ class IteratorTest extends TestCase
      */
     public function testException2(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $this->expectException(Exception::class);
         $m = $m->tryLoad(1);
     }
@@ -36,7 +37,7 @@ class IteratorTest extends TestCase
      */
     public function testException3(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $this->expectException(Exception::class);
         $m = $m->tryLoadAny();
     }
@@ -46,7 +47,7 @@ class IteratorTest extends TestCase
      */
     public function testException4(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $this->expectException(Exception::class);
         $m = $m->load(1);
     }
@@ -56,7 +57,7 @@ class IteratorTest extends TestCase
      */
     public function testException5(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $this->expectException(Exception::class);
         $m = $m->loadAny();
     }
@@ -66,7 +67,7 @@ class IteratorTest extends TestCase
      */
     public function testException6(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $this->expectException(Exception::class);
         $m->save();
     }
@@ -76,7 +77,7 @@ class IteratorTest extends TestCase
      */
     public function testException7(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $this->expectException(Exception::class);
         $m->action('count');
     }
@@ -91,7 +92,7 @@ class IteratorTest extends TestCase
             ],
         ]);
 
-        $i = (new Model($this->db, ['table' => 'invoice']))->addFields(['total_net', 'total_vat']);
+        $i = (new Model2($this->db, ['table' => 'invoice']))->addFields(['total_net', 'total_vat']);
         $i->addExpression('total_gross', ['expr' => '[total_net] + [total_vat]']);
 
         $i->setOrder('total_net');
@@ -134,7 +135,7 @@ class IteratorTest extends TestCase
             ],
         ]);
 
-        $i = (new Model($this->db, ['table' => 'invoice']))->addFields(['total_net', 'total_vat']);
+        $i = (new Model2($this->db, ['table' => 'invoice']))->addFields(['total_net', 'total_vat']);
         $i->addExpression('total_gross', ['expr' => '[total_net] + [total_vat]']);
 
         $i->setOrder('total_net');
@@ -177,7 +178,7 @@ class IteratorTest extends TestCase
             ],
         ]);
 
-        $i = (new Model($this->db, ['table' => 'invoice']))->addFields(['total_net', 'total_vat']);
+        $i = (new Model2($this->db, ['table' => 'invoice']))->addFields(['total_net', 'total_vat']);
         $i->addExpression('total_gross', ['expr' => '[total_net] + [total_vat]']);
 
         $i->setOrder('total_net');

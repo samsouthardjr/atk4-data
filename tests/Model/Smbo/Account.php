@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Atk4\Data\Tests\Model\Smbo;
 
 use Atk4\Data\Model;
+use Atk4\Data\Model2;
 
-class Account extends Model
+class Account extends Model2
 {
     public $table = 'account';
 

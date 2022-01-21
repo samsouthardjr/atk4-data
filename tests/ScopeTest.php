@@ -8,11 +8,12 @@ use Atk4\Data\Exception;
 use Atk4\Data\Model;
 use Atk4\Data\Model\Scope;
 use Atk4\Data\Model\Scope\Condition;
+use Atk4\Data\Model2;
 use Atk4\Data\Persistence\Sql\Expression;
 use Atk4\Data\Schema\TestCase;
 use Doctrine\DBAL\Platforms\SqlitePlatform;
 
-class SCountry extends Model
+class SCountry extends Model2
 {
     public $table = 'country';
     public $caption = 'Country';
@@ -31,7 +32,7 @@ class SCountry extends Model
     }
 }
 
-class SUser extends Model
+class SUser extends Model2
 {
     public $table = 'user';
     public $caption = 'User';
@@ -52,7 +53,7 @@ class SUser extends Model
     }
 }
 
-class STicket extends Model
+class STicket extends Model2
 {
     public $table = 'ticket';
     public $caption = 'Ticket';

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Atk4\Data\Tests\Persistence\Sql\WithDb;
 
-use Atk4\Data\Model;
+use Atk4\Data\Model2;
 use Atk4\Data\Persistence\Sql\Connection;
 use Atk4\Data\Persistence\Sql\Exception;
 use Atk4\Data\Persistence\Sql\ExecuteException;
@@ -27,7 +27,7 @@ class SelectTest extends TestCase
 
         $this->c = $this->db->connection;
 
-        $model = new Model($this->db, ['table' => 'employee']);
+        $model = new Model2($this->db, ['table' => 'employee']);
         $model->addField('name');
         $model->addField('surname');
         $model->addField('retired', ['type' => 'boolean']);
@@ -295,7 +295,7 @@ class SelectTest extends TestCase
 
     public function testImportAndAutoincrement(): void
     {
-        $m = new Model($this->db, ['table' => 'test']);
+        $m = new Model2($this->db, ['table' => 'test']);
         $m->getField('id')->actual = 'myid';
         $m->setOrder('id');
         $m->addField('f1');

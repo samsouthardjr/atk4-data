@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Atk4\Data\Tests;
 
 use Atk4\Data\Exception;
-use Atk4\Data\Model;
+use Atk4\Data\Model2;
 use Atk4\Data\Schema\TestCase;
 
 class SerializeTest extends TestCase
 {
     public function testBasicSerialize(): void
     {
-        $m = new Model($this->db, ['table' => 'job']);
+        $m = new Model2($this->db, ['table' => 'job']);
 
         $f = $m->addField('data', ['type' => 'object']);
 
@@ -50,7 +50,7 @@ class SerializeTest extends TestCase
 
     public function testSerializeErrorJson(): void
     {
-        $m = new Model($this->db, ['table' => 'job']);
+        $m = new Model2($this->db, ['table' => 'job']);
 
         $f = $m->addField('data', ['type' => 'json']);
 
@@ -60,7 +60,7 @@ class SerializeTest extends TestCase
 
     public function testSerializeErrorJson2(): void
     {
-        $m = new Model($this->db, ['table' => 'job']);
+        $m = new Model2($this->db, ['table' => 'job']);
 
         $f = $m->addField('data', ['type' => 'json']);
 
@@ -74,7 +74,7 @@ class SerializeTest extends TestCase
 
     public function testSerializeErrorSerialize(): void
     {
-        $m = new Model($this->db, ['table' => 'job']);
+        $m = new Model2($this->db, ['table' => 'job']);
 
         $this->expectException(Exception::class);
         $f = $m->addField('data', ['type' => 'object']);

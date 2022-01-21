@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Atk4\Data\Tests;
 
 use Atk4\Data\Model;
+use Atk4\Data\Model2;
 use Atk4\Data\Persistence;
 use Atk4\Data\Schema\TestCase;
 
@@ -23,7 +24,7 @@ trait UaReminder
     }
 }
 
-class UaClient extends Model
+class UaClient extends Model2
 {
     use UaReminder;
 

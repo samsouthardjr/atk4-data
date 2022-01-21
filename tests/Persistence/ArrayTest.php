@@ -7,6 +7,7 @@ namespace Atk4\Data\Tests\Persistence;
 use Atk4\Core\Phpunit\TestCase;
 use Atk4\Data\Exception;
 use Atk4\Data\Model;
+use Atk4\Data\Model2;
 use Atk4\Data\Persistence;
 use Atk4\Data\Tests\Model\Female;
 use Atk4\Data\Tests\Model\Male;
@@ -37,7 +38,7 @@ class ArrayTest extends TestCase
                 2 => ['name' => 'Sarah', 'surname' => 'Jones'],
             ],
         ]);
-        $m = new Model($p, ['table' => 'user']);
+        $m = new Model2($p, ['table' => 'user']);
         $m->addField('name');
         $m->addField('surname');
 
@@ -98,7 +99,7 @@ class ArrayTest extends TestCase
                 2 => ['name' => 'Sarah', 'surname' => 'Jones'],
             ],
         ]);
-        $m = new Model($p, ['table' => 'user']);
+        $m = new Model2($p, ['table' => 'user']);
         $m->addField('name');
         $m->addField('surname');
 
@@ -140,7 +141,7 @@ class ArrayTest extends TestCase
                 2 => ['name' => 'Sarah', 'surname' => 'Jones'],
             ],
         ]);
-        $m = new Model($p, ['table' => 'user']);
+        $m = new Model2($p, ['table' => 'user']);
         $m->addField('name');
         $m->addField('surname');
 
@@ -165,7 +166,7 @@ class ArrayTest extends TestCase
                 2 => ['name' => 'Sarah', 'surname' => 'Jones'],
             ],
         ]);
-        $m = new Model($p, ['table' => 'user']);
+        $m = new Model2($p, ['table' => 'user']);
         $m->addField('name');
         $m->addField('surname');
 
@@ -187,7 +188,7 @@ class ArrayTest extends TestCase
             1 => ['name' => 'John', 'surname' => 'Smith'],
             2 => ['name' => 'Sarah', 'surname' => 'Jones'],
         ]);
-        $m = new Model($p);
+        $m = new Model2($p);
         $m->addField('name');
         $m->addField('surname');
 
@@ -215,7 +216,7 @@ class ArrayTest extends TestCase
             1 => ['name' => 'John', 'surname' => 'Smith'],
             2 => ['name' => 'Sarah', 'surname' => 'Jones'],
         ]);
-        $m = new Model($p);
+        $m = new Model2($p);
         $m->addField('name');
         $m->addField('surname');
 
@@ -239,7 +240,7 @@ class ArrayTest extends TestCase
             1 => ['name' => 'John', 'surname' => 'Smith'],
             2 => ['name' => 'Sarah', 'surname' => 'Jones'],
         ]);
-        $m = new Model($p);
+        $m = new Model2($p);
         $m->addField('name');
         $m->addField('surname');
 
@@ -255,7 +256,7 @@ class ArrayTest extends TestCase
             1 => ['name' => 'John', 'surname' => 'Smith'],
             2 => ['name' => 'Sarah', 'surname' => 'Jones'],
         ]);
-        $m = new Model($p);
+        $m = new Model2($p);
         $m->addField('name');
         $m->addField('surname');
 
@@ -300,7 +301,7 @@ class ArrayTest extends TestCase
         }
 
         $p = new Persistence\Array_($dbData);
-        $m = new Model($p, ['table' => 'countries']);
+        $m = new Model2($p, ['table' => 'countries']);
         $m->addField('code', ['type' => 'integer']);
         $m->addField('country');
         $m->addField('active', ['type' => 'boolean']);
@@ -410,7 +411,7 @@ class ArrayTest extends TestCase
         }
 
         $p = new Persistence\Array_($dbData);
-        $m = new Model($p, ['table' => 'countries']);
+        $m = new Model2($p, ['table' => 'countries']);
         $m->addField('code', ['type' => 'integer']);
         $m->addField('country');
         $m->addField('active', ['type' => 'boolean']);
@@ -509,7 +510,7 @@ class ArrayTest extends TestCase
             10 => ['items' => 0, 'active' => 1],
             11 => ['items' => null, 'active' => 1],
         ]]);
-        $m = new Model($p, ['table' => 'invoices']);
+        $m = new Model2($p, ['table' => 'invoices']);
         $m->addField('items', ['type' => 'integer']);
 
         $this->assertSame(13.5, $m->action('fx', ['avg', 'items'])->getOne());
@@ -524,7 +525,7 @@ class ArrayTest extends TestCase
         $p = new Persistence\Array_(['invoices' => [
             1 => ['number' => 'ABC9', 'items' => 11, 'active' => 1],
         ]]);
-        $m = new Model($p, ['table' => 'invoices']);
+        $m = new Model2($p, ['table' => 'invoices']);
         $m->addField('items', ['type' => 'integer']);
 
         $this->assertSame(1, $m->action('exists')->getOne());
@@ -565,7 +566,7 @@ class ArrayTest extends TestCase
 
         // order by one field ascending
         $p = new Persistence\Array_($dbData);
-        $m = new Model($p);
+        $m = new Model2($p);
         $m->addField('f1');
         $m->addField('f2');
         $m->addField('f3');
@@ -583,7 +584,7 @@ class ArrayTest extends TestCase
 
         // order by one field descending
         $p = new Persistence\Array_($dbData);
-        $m = new Model($p, ['id_field' => 'myid']);
+        $m = new Model2($p, ['id_field' => 'myid']);
         $m->id_field = 'id';
         $m->removeField('myid');
         $m->addField('id');
@@ -605,7 +606,7 @@ class ArrayTest extends TestCase
 
         // order by two fields ascending
         $p = new Persistence\Array_($dbData);
-        $m = new Model($p);
+        $m = new Model2($p);
         $m->addField('f1');
         $m->addField('f2');
         $m->addField('f3');
@@ -630,13 +631,13 @@ class ArrayTest extends TestCase
             ['id' => 3, 'f1' => 'A'],
         ]);
         $this->expectException(Exception::class);
-        $m = new Model($p);
+        $m = new Model2($p);
     }
 
     public function testImportAndAutoincrement(): void
     {
         $p = new Persistence\Array_([]);
-        $m = new Model($p);
+        $m = new Model2($p);
         $m->addField('f1');
 
         $m->import([
@@ -708,7 +709,7 @@ class ArrayTest extends TestCase
             3 => ['f1' => 'E'],
             4 => ['f1' => 'C'],
         ]);
-        $m = new Model($p);
+        $m = new Model2($p);
         $m->addField('f1');
 
         $this->assertSame(4, $m->action('count')->getOne());
@@ -745,7 +746,7 @@ class ArrayTest extends TestCase
             3 => ['name' => 'Sarah', 'surname' => 'XX'],
             4 => ['name' => 'Sarah', 'surname' => 'Smith'],
         ]);
-        $m = new Model($p);
+        $m = new Model2($p);
         $m->addField('name');
         $m->addField('surname');
 
@@ -767,7 +768,7 @@ class ArrayTest extends TestCase
     public function testUnsupportedAction(): void
     {
         $p = new Persistence\Array_([1 => ['name' => 'John']]);
-        $m = new Model($p);
+        $m = new Model2($p);
         $m->addField('name');
         $this->expectException(Exception::class);
         $m->action('foo');
@@ -776,7 +777,7 @@ class ArrayTest extends TestCase
     public function testUnsupportedAggregate(): void
     {
         $p = new Persistence\Array_([1 => ['name' => 'John']]);
-        $m = new Model($p);
+        $m = new Model2($p);
         $m->addField('name');
 
         $this->expectException(Exception::class);
@@ -786,7 +787,7 @@ class ArrayTest extends TestCase
     public function testUnsupportedCondition1(): void
     {
         $p = new Persistence\Array_([1 => ['name' => 'John']]);
-        $m = new Model($p);
+        $m = new Model2($p);
         $m->addField('name');
         $this->expectException(Exception::class);
         $m->addCondition('name');
@@ -795,10 +796,10 @@ class ArrayTest extends TestCase
     public function testUnsupportedCondition2(): void
     {
         $p = new Persistence\Array_([1 => ['name' => 'John']]);
-        $m = new Model($p);
+        $m = new Model2($p);
         $m->addField('name');
         $this->expectException(Exception::class);
-        $m->addCondition(new Model(), 'like', '%o%');
+        $m->addCondition(new Model2(), 'like', '%o%');
     }
 
     /**
@@ -817,11 +818,11 @@ class ArrayTest extends TestCase
             ],
         ]);
 
-        $user = new Model($p, ['table' => 'user']);
+        $user = new Model2($p, ['table' => 'user']);
         $user->addField('name');
         $user->addField('surname');
 
-        $country = new Model();
+        $country = new Model2();
         $country->table = 'country';
         $country->addField('name');
 
@@ -851,10 +852,10 @@ class ArrayTest extends TestCase
             ],
         ]);
 
-        $country = new Model($p, ['table' => 'country']);
+        $country = new Model2($p, ['table' => 'country']);
         $country->addField('name');
 
-        $user = new Model();
+        $user = new Model2();
         $user->table = 'user';
         $user->addField('name');
         $user->addField('surname');
@@ -872,7 +873,7 @@ class ArrayTest extends TestCase
     public function testLoadAnyThrowsExceptionOnRecordNotFound(): void
     {
         $p = new Persistence\Array_();
-        $m = new Model($p);
+        $m = new Model2($p);
         $m->addField('name');
         $this->expectExceptionCode(404);
         $m = $m->loadAny();
@@ -881,7 +882,7 @@ class ArrayTest extends TestCase
     public function testTryLoadAnyNotThrowsExceptionOnRecordNotFound(): void
     {
         $p = new Persistence\Array_();
-        $m = new Model($p);
+        $m = new Model2($p);
         $m->addField('name');
         $m->addField('surname');
         $m = $m->tryLoadAny();
@@ -896,7 +897,7 @@ class ArrayTest extends TestCase
         ];
 
         $p = new Persistence\Array_($a);
-        $m = new Model($p);
+        $m = new Model2($p);
         $m->addField('name');
         $m->addField('surname');
         $m = $m->tryLoadAny();

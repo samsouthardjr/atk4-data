@@ -11,6 +11,7 @@ use Atk4\Core\TrackableTrait;
 use Atk4\Data\Exception;
 use Atk4\Data\Field;
 use Atk4\Data\Model;
+use Atk4\Data\Model2;
 use Atk4\Data\Reference;
 
 /**
@@ -116,7 +117,7 @@ abstract class Join
      */
     protected function createFakeForeignModel(): Model
     {
-        $fakeModel = new Model($this->getOwner()->persistence, [
+        $fakeModel = new Model2($this->getOwner()->persistence, [
             'table' => $this->foreign_table,
         ]);
         foreach ($this->getOwner()->getFields() as $ownerField) {

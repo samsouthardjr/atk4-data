@@ -7,6 +7,7 @@ namespace Atk4\Data\Tests;
 use Atk4\Data\Exception;
 use Atk4\Data\Field;
 use Atk4\Data\Model;
+use Atk4\Data\Model2;
 use Atk4\Data\Schema\TestCase;
 use Atk4\Data\ValidationException;
 
@@ -14,7 +15,7 @@ class FieldTest extends TestCase
 {
     public function testDirty1(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('foo', ['default' => 'abc']);
         $m = $m->createEntity();
 
@@ -45,7 +46,7 @@ class FieldTest extends TestCase
 
     public function testCompare(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('foo', ['default' => 'abc']);
         $m = $m->createEntity();
 
@@ -58,7 +59,7 @@ class FieldTest extends TestCase
 
     public function testMandatory1(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('foo', ['mandatory' => true]);
         $m = $m->createEntity();
         $m->set('foo', 'abc');
@@ -70,7 +71,7 @@ class FieldTest extends TestCase
 
     public function testRequired1(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('foo', ['required' => true]);
         $m = $m->createEntity();
 
@@ -80,7 +81,7 @@ class FieldTest extends TestCase
 
     public function testRequired11(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('foo', ['required' => true]);
         $m = $m->createEntity();
 
@@ -96,7 +97,7 @@ class FieldTest extends TestCase
             ],
         ]);
 
-        $m = new Model($this->db, ['table' => 'user']);
+        $m = new Model2($this->db, ['table' => 'user']);
         $m->addField('name', ['mandatory' => true]);
         $m->addField('surname');
         $this->expectException(Exception::class);
@@ -111,7 +112,7 @@ class FieldTest extends TestCase
             ],
         ]);
 
-        $m = new Model($this->db, ['table' => 'user']);
+        $m = new Model2($this->db, ['table' => 'user']);
         $m->addField('name', ['required' => true]);
         $m->addField('surname');
         $this->expectException(Exception::class);
@@ -126,7 +127,7 @@ class FieldTest extends TestCase
             ],
         ]);
 
-        $m = new Model($this->db, ['table' => 'user']);
+        $m = new Model2($this->db, ['table' => 'user']);
         $m->addField('name', ['mandatory' => true]);
         $m->addField('surname');
         $m = $m->load(1);
@@ -142,7 +143,7 @@ class FieldTest extends TestCase
             ],
         ]);
 
-        $m = new Model($this->db, ['table' => 'user']);
+        $m = new Model2($this->db, ['table' => 'user']);
         $m->addField('name', ['mandatory' => true, 'default' => 'NoName']);
         $m->addField('surname');
         $m->insert(['surname' => 'qq']);
@@ -156,7 +157,7 @@ class FieldTest extends TestCase
 
     public function testCaption(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $f = $m->addField('foo');
         $this->assertSame('Foo', $f->getCaption());
 
@@ -181,7 +182,7 @@ class FieldTest extends TestCase
 
     public function testReadOnly1(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('foo', ['read_only' => true]);
         $m = $m->createEntity();
         $this->expectException(Exception::class);
@@ -190,7 +191,7 @@ class FieldTest extends TestCase
 
     public function testReadOnly2(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('foo', ['read_only' => true, 'default' => 'abc']);
         $m = $m->createEntity();
         $m->set('foo', 'abc');
@@ -199,7 +200,7 @@ class FieldTest extends TestCase
 
     public function testEnum1(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('foo', ['enum' => ['foo', 'bar']]);
         $m = $m->createEntity();
         $this->expectException(Exception::class);
@@ -208,7 +209,7 @@ class FieldTest extends TestCase
 
     public function testEnum2(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('foo', ['enum' => ['1', 'bar']]);
         $m = $m->createEntity();
         $m->set('foo', '1');
@@ -221,7 +222,7 @@ class FieldTest extends TestCase
 
     public function testEnum2b(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('foo', ['type' => 'integer', 'enum' => [1, 2]]);
         $m = $m->createEntity();
         $m->set('foo', 1);
@@ -234,7 +235,7 @@ class FieldTest extends TestCase
 
     public function testEnum3(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('foo', ['enum' => [1, 'bar']]);
         $m = $m->createEntity();
         $this->expectException(Exception::class);
@@ -246,7 +247,7 @@ class FieldTest extends TestCase
         // PHP type control is really crappy...
         // This test has no purpose but it stands testament
         // to a weird behaviours of PHP
-        $m = new Model();
+        $m = new Model2();
         $m->addField('foo', ['enum' => [1, 'bar'], 'default' => 1]);
         $m = $m->createEntity();
         $m->setNull('foo');
@@ -256,7 +257,7 @@ class FieldTest extends TestCase
 
     public function testValues1(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('foo', ['values' => ['foo', 'bar']]);
         $m = $m->createEntity();
         $this->expectException(Exception::class);
@@ -265,7 +266,7 @@ class FieldTest extends TestCase
 
     public function testValues2(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('foo', ['type' => 'integer', 'values' => [3 => 'bar']]);
         $m = $m->createEntity();
         $m->set('foo', 3);
@@ -278,7 +279,7 @@ class FieldTest extends TestCase
 
     public function testValues3(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('foo', ['values' => [1 => 'bar']]);
         $m = $m->createEntity();
         $this->expectException(Exception::class);
@@ -290,7 +291,7 @@ class FieldTest extends TestCase
         // PHP type control is really crappy...
         // This test has no purpose but it stands testament
         // to a weird behaviours of PHP
-        $m = new Model();
+        $m = new Model2();
         $m->addField('foo', ['values' => ['1a' => 'bar']]);
         $m = $m->createEntity();
         $m->set('foo', '1a');
@@ -305,7 +306,7 @@ class FieldTest extends TestCase
             ],
         ]);
 
-        $m = new Model($this->db, ['table' => 'item']);
+        $m = new Model2($this->db, ['table' => 'item']);
         $m->addField('name', ['never_persist' => true]);
         $m->addField('surname', ['never_save' => true]);
         $m = $m->load(1);
@@ -366,10 +367,10 @@ class FieldTest extends TestCase
             ],
         ]);
 
-        $c = new Model($this->db, ['table' => 'category']);
+        $c = new Model2($this->db, ['table' => 'category']);
         $c->addField('name');
 
-        $m = new Model($this->db, ['table' => 'user']);
+        $m = new Model2($this->db, ['table' => 'user']);
         $m->addField('name');
         $m->hasOne('category_id', ['model' => $c])
             ->addTitle();
@@ -396,7 +397,7 @@ class FieldTest extends TestCase
 
     public function testNonExisitngField(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('foo');
         $m = $m->createEntity();
         $this->expectException(Exception::class);
@@ -411,7 +412,7 @@ class FieldTest extends TestCase
             ],
         ]);
 
-        $m = new Model($this->db, ['table' => 'user']);
+        $m = new Model2($this->db, ['table' => 'user']);
         $m->addField('first_name', ['actual' => 'name']);
         $m->addField('surname');
         $m->insert(['first_name' => 'Peter', 'surname' => 'qq']);
@@ -450,7 +451,7 @@ class FieldTest extends TestCase
             ],
         ]);
 
-        $m = new Model($this->db, ['table' => 'invoice']);
+        $m = new Model2($this->db, ['table' => 'invoice']);
         $m->addField('net', ['type' => 'atk4_money']);
         $m->addField('vat', ['type' => 'atk4_money']);
         $m->addCalculatedField('total', ['expr' => function ($m) {
@@ -469,7 +470,7 @@ class FieldTest extends TestCase
 
     public function testSystem1(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('foo', ['system' => true]);
         $m->addField('bar');
         $this->assertFalse($m->getField('foo')->isEditable());
@@ -485,7 +486,7 @@ class FieldTest extends TestCase
         $this->assertSame('test', (new Field(['type' => 'string']))->normalize('test'));
         $this->assertSame('test', (new Field(['type' => 'string']))->normalize('test '));
 
-        $m = new Model();
+        $m = new Model2();
 
         $m->addField('string', ['type' => 'string']);
         $m->addField('text', ['type' => 'text']);
@@ -539,7 +540,7 @@ class FieldTest extends TestCase
 
     public function testNormalizeException1(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('foo', ['type' => 'string']);
         $m = $m->createEntity();
         $this->expectException(ValidationException::class);
@@ -548,7 +549,7 @@ class FieldTest extends TestCase
 
     public function testNormalizeException2(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('foo', ['type' => 'text']);
         $m = $m->createEntity();
         $this->expectException(ValidationException::class);
@@ -557,7 +558,7 @@ class FieldTest extends TestCase
 
     public function testNormalizeException3(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('foo', ['type' => 'integer']);
         $m = $m->createEntity();
         $this->expectException(ValidationException::class);
@@ -566,7 +567,7 @@ class FieldTest extends TestCase
 
     public function testNormalizeException4(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('foo', ['type' => 'atk4_money']);
         $m = $m->createEntity();
         $this->expectException(ValidationException::class);
@@ -575,7 +576,7 @@ class FieldTest extends TestCase
 
     public function testNormalizeException5(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('foo', ['type' => 'float']);
         $m = $m->createEntity();
         $this->expectException(ValidationException::class);
@@ -584,7 +585,7 @@ class FieldTest extends TestCase
 
     public function testNormalizeException6(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('foo', ['type' => 'date']);
         $m = $m->createEntity();
         $this->expectException(ValidationException::class);
@@ -593,7 +594,7 @@ class FieldTest extends TestCase
 
     public function testNormalizeException7(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('foo', ['type' => 'datetime']);
         $m = $m->createEntity();
         $this->expectException(ValidationException::class);
@@ -602,7 +603,7 @@ class FieldTest extends TestCase
 
     public function testNormalizeException8(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('foo', ['type' => 'time']);
         $m = $m->createEntity();
         $this->expectException(ValidationException::class);
@@ -611,7 +612,7 @@ class FieldTest extends TestCase
 
     public function testNormalizeException9(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('foo', ['type' => 'integer']);
         $m = $m->createEntity();
         $this->expectException(ValidationException::class);
@@ -620,7 +621,7 @@ class FieldTest extends TestCase
 
     public function testNormalizeException10(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('foo', ['type' => 'atk4_money']);
         $m = $m->createEntity();
         $this->expectException(ValidationException::class);
@@ -629,7 +630,7 @@ class FieldTest extends TestCase
 
     public function testNormalizeException11(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('foo', ['type' => 'float']);
         $m = $m->createEntity();
         $this->expectException(ValidationException::class);
@@ -638,7 +639,7 @@ class FieldTest extends TestCase
 
     public function testNormalizeException12(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('foo', ['type' => 'json']);
         $m = $m->createEntity();
         $this->expectException(ValidationException::class);
@@ -647,7 +648,7 @@ class FieldTest extends TestCase
 
     public function testNormalizeException13(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('foo', ['type' => 'object']);
         $m = $m->createEntity();
         $this->expectException(ValidationException::class);
@@ -656,7 +657,7 @@ class FieldTest extends TestCase
 
     public function testNormalizeException14(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('foo', ['type' => 'boolean']);
         $m = $m->createEntity();
         $this->expectException(ValidationException::class);
@@ -665,7 +666,7 @@ class FieldTest extends TestCase
 
     public function testToString(): void
     {
-        $m = new Model();
+        $m = new Model2();
 
         $m->addField('string', ['type' => 'string']);
         $m->addField('text', ['type' => 'text']);
@@ -697,13 +698,13 @@ class FieldTest extends TestCase
     public function testAddFieldDirectly(): void
     {
         $this->expectException(Exception::class);
-        $model = new Model();
+        $model = new Model2();
         $model->add(new Field(), ['test']);
     }
 
     public function testGetFields(): void
     {
-        $model = new Model();
+        $model = new Model2();
         $model->addField('system', ['system' => true]);
         $model->addField('editable', ['ui' => ['editable' => true]]);
         $model->addField('editable_system', ['ui' => ['editable' => true], 'system' => true]);
@@ -733,7 +734,7 @@ class FieldTest extends TestCase
 
     public function testDateTimeFieldsToString(): void
     {
-        $model = new Model();
+        $model = new Model2();
         $model->addField('date', ['type' => 'date']);
         $model->addField('time', ['type' => 'time']);
         $model->addField('datetime', ['type' => 'datetime']);
@@ -766,7 +767,7 @@ class FieldTest extends TestCase
 
     public function testSetNull(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('a');
         $m->addField('b', ['mandatory' => true]);
         $m->addField('c', ['required' => true]);
@@ -801,7 +802,7 @@ class FieldTest extends TestCase
 
     public function testEntityFieldPair(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('foo');
         $m->addField('bar', ['mandatory' => true]);
 
@@ -834,7 +835,7 @@ class FieldTest extends TestCase
 
     public function testBoolean(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('is_vip', ['type' => 'boolean']);
         $m = $m->createEntity();
 

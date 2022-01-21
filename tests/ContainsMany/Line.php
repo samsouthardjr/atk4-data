@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Atk4\Data\Tests\ContainsMany;
 
 use Atk4\Data\Model;
+use Atk4\Data\Model2;
 
 /**
  * Invoice lines model.
@@ -17,7 +18,7 @@ use Atk4\Data\Model;
  * @property Discount  $discounts         @Atk4\RefMany()
  * @property float     $discounts_percent @Atk4\Field()
  */
-class Line extends Model
+class Line extends Model2
 {
     protected function init(): void
     {

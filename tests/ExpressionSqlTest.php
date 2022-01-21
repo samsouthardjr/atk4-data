@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Atk4\Data\Tests;
 
-use Atk4\Data\Model;
+use Atk4\Data\Model2;
 use Atk4\Data\Schema\TestCase;
 use Doctrine\DBAL\Platforms\OraclePlatform;
 use Doctrine\DBAL\Platforms\SqlitePlatform;
@@ -13,7 +13,7 @@ class ExpressionSqlTest extends TestCase
 {
     public function testNakedExpression(): void
     {
-        $m = new Model($this->db, ['table' => false]);
+        $m = new Model2($this->db, ['table' => false]);
         $m->addExpression('x', ['expr' => '2 + 3', 'type' => 'integer']);
         $m = $m->loadOne();
         $this->assertSame(5, $m->get('x'));
@@ -28,7 +28,7 @@ class ExpressionSqlTest extends TestCase
             ],
         ]);
 
-        $i = (new Model($this->db, ['table' => 'invoice']))->addFields(['total_net', 'total_vat']);
+        $i = (new Model2($this->db, ['table' => 'invoice']))->addFields(['total_net', 'total_vat']);
         $i->addExpression('total_gross', ['expr' => '[total_net] + [total_vat]']);
 
         if ($this->getDatabasePlatform() instanceof SqlitePlatform) {
@@ -68,7 +68,7 @@ class ExpressionSqlTest extends TestCase
             ],
         ]);
 
-        $i = (new Model($this->db, ['table' => 'invoice']))->addFields(['total_net', 'total_vat']);
+        $i = (new Model2($this->db, ['table' => 'invoice']))->addFields(['total_net', 'total_vat']);
         $i->addExpression('total_gross', ['expr' => function ($i, $q) {
             return '[total_net] + [total_vat]';
         }, 'type' => 'float']);
@@ -98,7 +98,7 @@ class ExpressionSqlTest extends TestCase
             ],
         ]);
 
-        $i = (new Model($this->db, ['table' => 'invoice']))->addFields(['total_net', 'total_vat']);
+        $i = (new Model2($this->db, ['table' => 'invoice']))->addFields(['total_net', 'total_vat']);
         $i->addExpression('sum_net', ['expr' => $i->action('fx', ['sum', 'total_net'])]);
 
         if ($this->getDatabasePlatform() instanceof SqlitePlatform) {
@@ -130,7 +130,7 @@ class ExpressionSqlTest extends TestCase
             ],
         ]);
 
-        $m = new Model($this->db, ['table' => 'user']);
+        $m = new Model2($this->db, ['table' => 'user']);
         $m->addFields(['name', 'surname', 'cached_name']);
 
         if ($this->getDatabasePlatform() instanceof SqlitePlatform) {
@@ -164,7 +164,7 @@ class ExpressionSqlTest extends TestCase
             ],
         ]);
 
-        $m = new Model($this->db, ['table' => 'math']);
+        $m = new Model2($this->db, ['table' => 'math']);
         $m->addFields(['a', 'b']);
 
         $m->addExpression('sum', ['expr' => '[a] + [b]']);
@@ -178,7 +178,7 @@ class ExpressionSqlTest extends TestCase
         $this->assertEquals(9, $m->createEntity()->save(['a' => 4, 'b' => 5])->get('sum'));
 
         $this->setDb($dbData);
-        $m = new Model($this->db, ['table' => 'math', 'reload_after_save' => false]);
+        $m = new Model2($this->db, ['table' => 'math', 'reload_after_save' => false]);
         $m->addFields(['a', 'b']);
 
         $m->addExpression('sum', ['expr' => '[a] + [b]']);
@@ -194,7 +194,7 @@ class ExpressionSqlTest extends TestCase
 
     public function testExpressionActionAlias(): void
     {
-        $m = new Model($this->db, ['table' => false]);
+        $m = new Model2($this->db, ['table' => false]);
         $m->addExpression('x', ['expr' => '2 + 3']);
 
         // use alias as array key if it is set
@@ -227,7 +227,7 @@ class ExpressionSqlTest extends TestCase
             ],
         ]);
 
-        $i = new Model($this->db, ['table' => 'invoice']);
+        $i = new Model2($this->db, ['table' => 'invoice']);
 
         $i->addExpression('zero_basic', ['expr' => $i->expr('0'), 'type' => 'integer', 'system' => true]);
         $i->addExpression('zero_never_save', ['expr' => $i->expr('0'), 'type' => 'integer', 'system' => true, 'never_save' => true]);

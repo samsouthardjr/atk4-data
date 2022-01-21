@@ -6,19 +6,20 @@ namespace Atk4\Data\Tests;
 
 use Atk4\Data\Exception;
 use Atk4\Data\Model;
+use Atk4\Data\Model2;
 use Atk4\Data\Schema\TestCase;
 
 class ReferenceTest extends TestCase
 {
     public function testBasicReferences(): void
     {
-        $user = new Model(null, ['table' => 'user']);
+        $user = new Model2(null, ['table' => 'user']);
         $user->addField('id', ['type' => 'integer']);
         $user->addField('name');
         $user = $user->createEntity();
         $user->setId(1);
 
-        $order = new Model();
+        $order = new Model2();
         $order->addField('id');
         $order->addField('amount', ['default' => 20]);
         $order->addField('user_id', ['type' => 'integer']);
@@ -30,7 +31,7 @@ class ReferenceTest extends TestCase
         $this->assertSame(1, $o->get('user_id'));
 
         $user->getModel()->hasMany('BigOrders', ['model' => function () {
-            $m = new Model();
+            $m = new Model2();
             $m->addField('amount', ['default' => 100]);
             $m->addField('user_id');
 
@@ -45,13 +46,13 @@ class ReferenceTest extends TestCase
      */
     public function testModelCaption(): void
     {
-        $user = new Model(null, ['table' => 'user']);
+        $user = new Model2(null, ['table' => 'user']);
         $user->addField('id');
         $user->addField('name');
         $user = $user->createEntity();
         $user->setId(1);
 
-        $order = new Model();
+        $order = new Model2();
         $order->addField('id');
         $order->addField('amount', ['default' => 20]);
         $order->addField('user_id');
@@ -65,18 +66,18 @@ class ReferenceTest extends TestCase
 
     public function testModelProperty(): void
     {
-        $user = new Model($this->db, ['table' => 'user']);
+        $user = new Model2($this->db, ['table' => 'user']);
         $user = $user->createEntity();
         $user->setId(1);
-        $user->getModel()->hasOne('order_id', ['model' => [Model::class, 'table' => 'order']]);
+        $user->getModel()->hasOne('order_id', ['model' => [Model2::class, 'table' => 'order']]);
         $o = $user->ref('order_id');
         $this->assertSame('order', $o->table);
     }
 
     public function testRefName1(): void
     {
-        $user = new Model(null, ['table' => 'user']);
-        $order = new Model();
+        $user = new Model2(null, ['table' => 'user']);
+        $order = new Model2();
         $order->addField('user_id');
 
         $user->hasMany('Orders', ['model' => $order]);
@@ -86,8 +87,8 @@ class ReferenceTest extends TestCase
 
     public function testRefName2(): void
     {
-        $order = new Model(null, ['table' => 'order']);
-        $user = new Model(null, ['table' => 'user']);
+        $order = new Model2(null, ['table' => 'order']);
+        $user = new Model2(null, ['table' => 'user']);
 
         $user->hasOne('user_id', ['model' => $user]);
         $this->expectException(Exception::class);
@@ -96,7 +97,7 @@ class ReferenceTest extends TestCase
 
     public function testRefName3(): void
     {
-        $order = new Model($this->db, ['table' => 'order']);
+        $order = new Model2($this->db, ['table' => 'order']);
         $order->addRef('archive', ['model' => function ($m) {
             return new $m(null, ['table' => $m->table . '_archive']);
         }]);
@@ -108,7 +109,7 @@ class ReferenceTest extends TestCase
 
     public function testCustomRef(): void
     {
-        $m = new Model($this->db, ['table' => 'user']);
+        $m = new Model2($this->db, ['table' => 'user']);
         $m->addRef('archive', ['model' => function ($m) {
             return new $m(null, ['table' => $m->table . '_archive']);
         }]);

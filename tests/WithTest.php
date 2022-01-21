@@ -6,6 +6,7 @@ namespace Atk4\Data\Tests;
 
 use Atk4\Data\Exception;
 use Atk4\Data\Model;
+use Atk4\Data\Model2;
 use Atk4\Data\Schema\TestCase;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
 
@@ -26,11 +27,11 @@ class WithTest extends TestCase
         ]);
 
         // setup models
-        $m_user = new Model($this->db, ['table' => 'user']);
+        $m_user = new Model2($this->db, ['table' => 'user']);
         $m_user->addField('name');
         $m_user->addField('salary', ['type' => 'integer']);
 
-        $m_invoice = new Model($this->db, ['table' => 'invoice']);
+        $m_invoice = new Model2($this->db, ['table' => 'invoice']);
         $m_invoice->addField('net', ['type' => 'integer']);
         $m_invoice->hasOne('user_id', ['model' => $m_user]);
         $m_invoice->addCondition('net', '>', 100);
@@ -64,8 +65,8 @@ class WithTest extends TestCase
 
     public function testUniqueAliasException(): void
     {
-        $m1 = new Model();
-        $m2 = new Model();
+        $m1 = new Model2();
+        $m2 = new Model2();
         $m1->addWith($m2, 't');
         $this->expectException(Exception::class);
         $m1->addWith($m2, 't');

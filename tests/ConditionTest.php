@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Atk4\Data\Tests;
 
 use Atk4\Core\Phpunit\TestCase;
-use Atk4\Data\Model;
+use Atk4\Data\Model2;
 
 class ConditionTest extends TestCase
 {
     public function testException1(): void
     {
         // not existing field in condition
-        $m = new Model();
+        $m = new Model2();
         $m->addField('name');
 
         $this->expectException(\Atk4\Core\Exception::class);
@@ -21,7 +21,7 @@ class ConditionTest extends TestCase
 
     public function testBasicDiscrimination(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('name');
 
         $m->addField('gender', ['enum' => ['M', 'F']]);
@@ -38,7 +38,7 @@ class ConditionTest extends TestCase
 
     public function testEditableAfterCondition(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('name');
         $m->addField('gender');
 
@@ -50,10 +50,10 @@ class ConditionTest extends TestCase
 
     public function testEditableHasOne(): void
     {
-        $gender = new Model();
+        $gender = new Model2();
         $gender->addField('name');
 
-        $m = new Model();
+        $m = new Model2();
         $m->addField('name');
         $m->hasOne('gender_id', ['model' => $gender]);
 

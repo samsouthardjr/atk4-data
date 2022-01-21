@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Atk4\Data\Tests;
 
 use Atk4\Data\Model;
+use Atk4\Data\Model2;
 use Atk4\Data\Schema\TestCase;
 use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\DBAL\Platforms\SqlitePlatform;
@@ -20,7 +21,7 @@ class ConditionSqlTest extends TestCase
             ],
         ]);
 
-        $m = new Model($this->db, ['table' => 'user']);
+        $m = new Model2($this->db, ['table' => 'user']);
         $m->addFields(['name', 'gender']);
 
         $mm = $m->tryLoad(1);
@@ -52,7 +53,7 @@ class ConditionSqlTest extends TestCase
 
     public function testEntityNoScopeCloning(): void
     {
-        $m = new Model($this->db, ['table' => 'user']);
+        $m = new Model2($this->db, ['table' => 'user']);
         $scope = $m->scope();
         $this->assertSame($scope, $m->createEntity()->getModel()->scope());
         $this->expectException(\Atk4\Data\Exception::class);
@@ -68,13 +69,13 @@ class ConditionSqlTest extends TestCase
             ],
         ]);
 
-        $m = new Model($this->db, ['table' => 'user']);
+        $m = new Model2($this->db, ['table' => 'user']);
         $m->addFields(['name', 'gender']);
 
         $m = $m->tryLoad(1);
         $this->assertSame('John', $m->get('name'));
         \Closure::bind(function () use ($m) {
-            $m->_entityId = 2;
+            $m->_entityId = null ?? 2; // @phpstan-ignore-line https://github.com/phpstan/phpstan-src/pull/706
         }, null, Model::class)();
         $this->expectException(\Atk4\Data\Exception::class);
         $this->expectExceptionMessageMatches('~entity.+different~');
@@ -92,7 +93,7 @@ class ConditionSqlTest extends TestCase
             ],
         ]);
 
-        $m = new Model($this->db, ['table' => 'user']);
+        $m = new Model2($this->db, ['table' => 'user']);
         $m->addFields(['name', 'gender']);
 
         $m->addCondition('gender', null);
@@ -117,7 +118,7 @@ class ConditionSqlTest extends TestCase
             ],
         ]);
 
-        $m = new Model($this->db, ['table' => 'user']);
+        $m = new Model2($this->db, ['table' => 'user']);
         $m->addFields(['name', 'gender']);
 
         $mm = $m->tryLoad(1);
@@ -163,7 +164,7 @@ class ConditionSqlTest extends TestCase
             ],
         ]);
 
-        $m = new Model($this->db, ['table' => 'user']);
+        $m = new Model2($this->db, ['table' => 'user']);
         $m->addFields(['name', 'gender']);
 
         $mm = $m->tryLoad(1);
@@ -195,7 +196,7 @@ class ConditionSqlTest extends TestCase
             ],
         ]);
 
-        $m = new Model($this->db, ['table' => 'user']);
+        $m = new Model2($this->db, ['table' => 'user']);
         $m->addFields(['name', 'gender', 'surname']);
 
         $mm = $m->tryLoad(1);
@@ -245,7 +246,7 @@ class ConditionSqlTest extends TestCase
             ],
         ]);
 
-        $m = new Model($this->db, ['table' => 'user']);
+        $m = new Model2($this->db, ['table' => 'user']);
         $m->addFields(['name', 'gender', 'surname']);
 
         $m->join('contact')->addField('contact_phone');
@@ -293,22 +294,22 @@ class ConditionSqlTest extends TestCase
             ],
         ]);
 
-        $m = new Model($this->db, ['table' => 'user']);
+        $m = new Model2($this->db, ['table' => 'user']);
         $m->addField('name');
         $m->addCondition('name', ['John', 'Doe']);
         $this->assertCount(1, $m->export());
 
-        $m = new Model($this->db, ['table' => 'user']);
+        $m = new Model2($this->db, ['table' => 'user']);
         $m->addField('name');
         $m->addCondition('name', 'in', ['Johhny', 'Doe', 'Mary']);
         $this->assertCount(2, $m->export());
 
-        $m = new Model($this->db, ['table' => 'user']);
+        $m = new Model2($this->db, ['table' => 'user']);
         $m->addField('name');
         $m->addCondition('name', []); // this should not fail, always should be false
         $this->assertCount(0, $m->export());
 
-        $m = new Model($this->db, ['table' => 'user']);
+        $m = new Model2($this->db, ['table' => 'user']);
         $m->addField('name');
         $m->addCondition('name', 'not in', []); // this should not fail, always should be true
         $this->assertCount(3, $m->export());
@@ -323,7 +324,7 @@ class ConditionSqlTest extends TestCase
             ],
         ]);
 
-        $m = new Model($this->db, ['table' => 'user']);
+        $m = new Model2($this->db, ['table' => 'user']);
         $m->addField('name');
         $m->addField('date', ['type' => 'date']);
 
@@ -340,7 +341,7 @@ class ConditionSqlTest extends TestCase
             ],
         ]);
 
-        $m = new Model($this->db, ['table' => 'user']);
+        $m = new Model2($this->db, ['table' => 'user']);
         $m->addField('name');
         $m->addField('date', ['type' => 'date']);
 
@@ -358,7 +359,7 @@ class ConditionSqlTest extends TestCase
             ],
         ]);
 
-        $m = new Model($this->db, ['table' => 'user']);
+        $m = new Model2($this->db, ['table' => 'user']);
         $m->addField('name');
         $m->addField('date', ['type' => 'date']);
 
@@ -376,7 +377,7 @@ class ConditionSqlTest extends TestCase
             ],
         ]);
 
-        $u = (new Model($this->db, ['table' => 'user']))->addFields(['name']);
+        $u = (new Model2($this->db, ['table' => 'user']))->addFields(['name']);
 
         $u->addCondition(Model\Scope::createOr(
             ['name', 'John'],
@@ -406,7 +407,7 @@ class ConditionSqlTest extends TestCase
             ],
         ]);
 
-        $u = (new Model($this->db, ['table' => 'user']))->addFields(['name']);
+        $u = (new Model2($this->db, ['table' => 'user']))->addFields(['name']);
 
         $u2 = $u->loadBy('name', 'John');
         $this->assertSame(['id' => 1, 'name' => 'John'], $u2->get());
@@ -438,7 +439,7 @@ class ConditionSqlTest extends TestCase
             ],
         ]);
 
-        $u = new Model($this->db, ['table' => 'user']);
+        $u = new Model2($this->db, ['table' => 'user']);
         $u->addField('name', ['type' => 'string']);
         $u->addField('active', ['type' => 'boolean']);
         $u->addField('created', ['type' => 'datetime']);

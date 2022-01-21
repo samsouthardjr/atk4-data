@@ -6,6 +6,7 @@ namespace Atk4\Data\Tests\Schema;
 
 use Atk4\Data\Field\PasswordField;
 use Atk4\Data\Model;
+use Atk4\Data\Model2;
 use Atk4\Data\Schema\TestCase;
 use Doctrine\DBAL\Platforms\OraclePlatform;
 use Doctrine\DBAL\Platforms\SQLServerPlatform;
@@ -124,7 +125,7 @@ class ModelTest extends TestCase
      */
     public function testCharacterTypeFieldCaseSensitivity(string $type, bool $isBinary): void
     {
-        $model = new Model($this->db, ['table' => 'user']);
+        $model = new Model2($this->db, ['table' => 'user']);
         $model->addField('v', ['type' => $type]);
 
         $this->createMigrator($model)->create();
@@ -213,7 +214,7 @@ class ModelTest extends TestCase
             $this->assertSame($lengthBytes - 1, strlen($str));
         }
 
-        $model = new Model($this->db, ['table' => 'user']);
+        $model = new Model2($this->db, ['table' => 'user']);
         $model->addField('v', ['type' => $type]);
 
         $this->createMigrator($model)->create();
@@ -253,7 +254,7 @@ class ModelTest extends TestCase
     }
 }
 
-class TestUser extends Model
+class TestUser extends Model2
 {
     public $table = 'user';
 
@@ -270,7 +271,7 @@ class TestUser extends Model
     }
 }
 
-class TestRole extends Model
+class TestRole extends Model2
 {
     public $table = 'role';
 

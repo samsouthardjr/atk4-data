@@ -7,7 +7,7 @@ namespace Atk4\Data\Tests;
 use Atk4\Core\Phpunit\TestCase;
 use Atk4\Data\Exception;
 use Atk4\Data\Field;
-use Atk4\Data\Model;
+use Atk4\Data\Model2;
 use Atk4\Data\Persistence;
 use Atk4\Data\Tests\Model\Client;
 use Atk4\Data\Tests\Model\User;
@@ -16,7 +16,7 @@ class BusinessModelTest extends TestCase
 {
     public function testConstructFields(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('name');
 
         $f = $m->getField('name');
@@ -29,7 +29,7 @@ class BusinessModelTest extends TestCase
 
     public function testFieldAccess(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('name');
         $m->addField('surname');
         $m = $m->createEntity();
@@ -46,7 +46,7 @@ class BusinessModelTest extends TestCase
 
     public function testNoFieldException(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m = $m->createEntity();
         $this->expectException(Exception::class);
         $m->set('name', 5);
@@ -54,7 +54,7 @@ class BusinessModelTest extends TestCase
 
     public function testDirty(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('name');
         $m = $m->createEntity();
         $dataRef = &$m->getDataRef();
@@ -107,7 +107,7 @@ class BusinessModelTest extends TestCase
         $this->assertSame([], $m->getDirtyRef());
 
         // now with defaults
-        $m = new Model();
+        $m = new Model2();
         $f = $m->addField('name', ['default' => 'John']);
         $m = $m->createEntity();
         $this->assertSame('John', $f->default);
@@ -126,7 +126,7 @@ class BusinessModelTest extends TestCase
     public function testDefaultInit(): void
     {
         $p = new Persistence\Array_();
-        $m = new Model($p);
+        $m = new Model2($p);
         $m = $m->createEntity();
 
         $this->assertNotNull($m->getField('id'));
@@ -137,7 +137,7 @@ class BusinessModelTest extends TestCase
 
     public function testException1(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('name');
         $m->addField('surname');
         $m->setOnlyFields(['surname']);
@@ -149,7 +149,7 @@ class BusinessModelTest extends TestCase
 
     public function testException1Fixed(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('name');
         $m->addField('surname');
         $m->setOnlyFields(['surname']);
@@ -163,7 +163,7 @@ class BusinessModelTest extends TestCase
 
     public function testSetTitle(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('name');
         $m = $m->createEntity();
         $m->set('name', 'foo');
@@ -178,7 +178,7 @@ class BusinessModelTest extends TestCase
      */
     public function testException2(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m = $m->createEntity();
         $this->expectException(\Error::class);
         $m->set(0, 'foo'); // @phpstan-ignore-line
@@ -186,7 +186,7 @@ class BusinessModelTest extends TestCase
 
     public function testException2a(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m = $m->createEntity();
         $this->expectException(Exception::class);
         $m->set('3', 'foo');
@@ -194,7 +194,7 @@ class BusinessModelTest extends TestCase
 
     public function testException2b(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m = $m->createEntity();
         $this->expectException(Exception::class);
         $m->set('3b', 'foo');
@@ -202,7 +202,7 @@ class BusinessModelTest extends TestCase
 
     public function testException2c(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m = $m->createEntity();
         $this->expectException(Exception::class);
         $m->set('', 'foo');
@@ -218,7 +218,7 @@ class BusinessModelTest extends TestCase
 
     public function testNormalize(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('name', ['type' => 'string']);
         $m->addField('age', ['type' => 'integer']);
         $m->addField('data');

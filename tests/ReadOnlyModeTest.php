@@ -6,6 +6,7 @@ namespace Atk4\Data\Tests;
 
 use Atk4\Data\Exception;
 use Atk4\Data\Model;
+use Atk4\Data\Model2;
 use Atk4\Data\Schema\TestCase;
 
 /**
@@ -27,7 +28,7 @@ class ReadOnlyModeTest extends TestCase
             ],
         ]);
 
-        $this->m = new Model($this->db, ['table' => 'user', 'read_only' => true]);
+        $this->m = new Model2($this->db, ['table' => 'user', 'read_only' => true]);
 
         $this->m->addFields(['name', 'gender']);
     }

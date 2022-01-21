@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Atk4\Data\Tests;
 
 use Atk4\Data\Model;
+use Atk4\Data\Model2;
 use Atk4\Data\Schema\TestCase;
 
 /**
@@ -20,7 +21,7 @@ use Atk4\Data\Schema\TestCase;
  * We also introduced 'user_names' field, which will concatenate all user names for said country. It can also be
  * used when importing, simply provide a comma-separated string of user names and they will be CREATED for you.
  */
-class LCountry extends Model
+class LCountry extends Model2
 {
     public $table = 'country';
 
@@ -56,7 +57,7 @@ class LCountry extends Model
  *
  * Like before Friends can also be specified as an array.
  */
-class LUser extends Model
+class LUser extends Model2
 {
     public $table = 'user';
 
@@ -88,7 +89,7 @@ class LUser extends Model
  * The challenge here is to make sure that those handlers are executed automatically
  * while importing User and Friends.
  */
-class LFriend extends Model
+class LFriend extends Model2
 {
     public $table = 'friend';
     public $title_field = 'friend_name';

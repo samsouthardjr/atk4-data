@@ -6,6 +6,7 @@ namespace Atk4\Data\Tests\Persistence;
 
 use Atk4\Data\Exception;
 use Atk4\Data\Model;
+use Atk4\Data\Model2;
 use Atk4\Data\Schema\TestCase;
 
 class SqlTest extends TestCase
@@ -19,7 +20,7 @@ class SqlTest extends TestCase
             ],
         ]);
 
-        $m = new Model($this->db, ['table' => 'user']);
+        $m = new Model2($this->db, ['table' => 'user']);
         $m->addField('name');
         $m->addField('surname');
 
@@ -47,7 +48,7 @@ class SqlTest extends TestCase
             ],
         ]);
 
-        $m = new Model($this->db, ['table' => 'user']);
+        $m = new Model2($this->db, ['table' => 'user']);
         $m->addField('name');
         $m->addField('surname');
 
@@ -85,7 +86,7 @@ class SqlTest extends TestCase
 
         $this->setDb($dbData);
 
-        $m = new Model($this->db, ['table' => 'user']);
+        $m = new Model2($this->db, ['table' => 'user']);
         $m->addField('name');
         $m->addField('surname');
 
@@ -119,7 +120,7 @@ class SqlTest extends TestCase
         ];
         $this->setDb($dbData);
 
-        $m = new Model($this->db, ['table' => 'user']);
+        $m = new Model2($this->db, ['table' => 'user']);
         $m->addField('name');
         $m->addField('surname');
 
@@ -142,7 +143,7 @@ class SqlTest extends TestCase
             ],
         ]);
 
-        $m = new Model($this->db, ['table' => 'user']);
+        $m = new Model2($this->db, ['table' => 'user']);
         $m->addField('name');
         $m->addField('surname');
 
@@ -167,7 +168,7 @@ class SqlTest extends TestCase
         ];
         $this->setDb($dbData, false); // create empty table
 
-        $m = new Model($this->db, ['table' => 'user']);
+        $m = new Model2($this->db, ['table' => 'user']);
         $m->addField('name');
         $m->addField('surname');
 
@@ -190,7 +191,7 @@ class SqlTest extends TestCase
         ];
         $this->setDb($dbData);
 
-        $m = new Model($this->db, ['table' => 'user']);
+        $m = new Model2($this->db, ['table' => 'user']);
         $m->addField('name');
         $m->addField('surname');
 
@@ -222,7 +223,7 @@ class SqlTest extends TestCase
             ],
         ]);
 
-        $m = new Model($this->db, ['table' => 'user']);
+        $m = new Model2($this->db, ['table' => 'user']);
         $m->addField('name');
         $m->addField('surname');
 

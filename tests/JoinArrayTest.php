@@ -6,7 +6,7 @@ namespace Atk4\Data\Tests;
 
 use Atk4\Core\Phpunit\TestCase;
 use Atk4\Data\Exception;
-use Atk4\Data\Model;
+use Atk4\Data\Model2;
 use Atk4\Data\Persistence;
 
 class JoinArrayTest extends TestCase
@@ -30,7 +30,7 @@ class JoinArrayTest extends TestCase
     public function testDirection(): void
     {
         $db = new Persistence\Array_(['user' => [], 'contact' => []]);
-        $m = new Model($db, ['table' => 'user']);
+        $m = new Model2($db, ['table' => 'user']);
 
         $j = $m->join('contact');
         $this->assertFalse($this->getProtected($j, 'reverse'));
@@ -57,7 +57,7 @@ class JoinArrayTest extends TestCase
     public function testJoinException(): void
     {
         $db = new Persistence\Array_(['user' => [], 'contact' => []]);
-        $m = new Model($db, ['table' => 'user']);
+        $m = new Model2($db, ['table' => 'user']);
 
         $this->expectException(Exception::class);
         $j = $m->join('contact.foo_id', ['master_field' => 'test_id']);
@@ -66,7 +66,7 @@ class JoinArrayTest extends TestCase
     public function testJoinSaving1(): void
     {
         $db = new Persistence\Array_(['user' => [], 'contact' => []]);
-        $m_u = new Model($db, ['table' => 'user']);
+        $m_u = new Model2($db, ['table' => 'user']);
         $m_u->addField('contact_id', ['type' => 'integer']);
         $m_u->addField('name');
         $j = $m_u->join('contact');
@@ -118,7 +118,7 @@ class JoinArrayTest extends TestCase
     public function testJoinSaving2(): void
     {
         $db = new Persistence\Array_(['user' => [], 'contact' => []]);
-        $m_u = new Model($db, ['table' => 'user']);
+        $m_u = new Model2($db, ['table' => 'user']);
         $m_u->addField('name');
         $j = $m_u->join('contact.test_id');
         $j->addField('contact_phone');
@@ -148,7 +148,7 @@ class JoinArrayTest extends TestCase
             ],
         ], $this->getInternalPersistenceData($db));
 
-        $m_c = new Model($db, ['table' => 'contact']);
+        $m_c = new Model2($db, ['table' => 'contact']);
         $m_c = $m_c->load(2);
         $m_c->delete();
 
@@ -172,7 +172,7 @@ class JoinArrayTest extends TestCase
     public function testJoinSaving3(): void
     {
         $db = new Persistence\Array_(['user' => [], 'contact' => []]);
-        $m_u = new Model($db, ['table' => 'user']);
+        $m_u = new Model2($db, ['table' => 'user']);
         $m_u->addField('name');
         $m_u->addField('test_id', ['type' => 'integer']);
         $j = $m_u->join('contact', ['master_field' => 'test_id']);
@@ -193,7 +193,7 @@ class JoinArrayTest extends TestCase
     /*public function testJoinSaving4(): void
     {
         $db = new Persistence\Array_(['user' => [], 'contact' => []]);
-        $m_u = new Model($db, ['table' => 'user']);
+        $m_u = new Model2($db, ['table' => 'user']);
         $m_u->addField('name');
         $m_u->addField('code');
         $j = $m_u->join('contact.code', ['master_field' => 'code']);
@@ -224,7 +224,7 @@ class JoinArrayTest extends TestCase
                 2 => ['contact_phone' => '+321'],
             ],
         ]);
-        $m_u = new Model($db, ['table' => 'user']);
+        $m_u = new Model2($db, ['table' => 'user']);
         $m_u->addField('contact_id', ['type' => 'integer']);
         $m_u->addField('name');
         $j = $m_u->join('contact');
@@ -258,7 +258,7 @@ class JoinArrayTest extends TestCase
                 2 => ['contact_phone' => '+321'],
             ],
         ]);
-        $m_u = new Model($db, ['table' => 'user']);
+        $m_u = new Model2($db, ['table' => 'user']);
         $m_u->addField('contact_id', ['type' => 'integer']);
         $m_u->addField('name');
         $j = $m_u->join('contact');
@@ -329,7 +329,7 @@ class JoinArrayTest extends TestCase
                 3 => ['contact_phone' => '+777'],
             ],
         ]);
-        $m_u = new Model($db, ['table' => 'user']);
+        $m_u = new Model2($db, ['table' => 'user']);
         $m_u->addField('contact_id', ['type' => 'integer']);
         $m_u->addField('name');
         $j = $m_u->join('contact');
@@ -362,7 +362,7 @@ class JoinArrayTest extends TestCase
                 3 => ['contact_phone' => '+777'],
             ],
         ]);
-        $m_u = new Model($db, ['table' => 'user']);
+        $m_u = new Model2($db, ['table' => 'user']);
         $m_u->addField('contact_id', ['type' => 'integer']);
         $m_u->addField('name');
         $j = $m_u->join('contact');
@@ -375,7 +375,7 @@ class JoinArrayTest extends TestCase
     public function testTrickyCases(): void
     {
         $db = new Persistence\Array_();
-        $m = new Model($db);
+        $m = new Model2($db);
 
         // tricky cases to testt
         //

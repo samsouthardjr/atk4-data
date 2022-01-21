@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Atk4\Data\Tests\ContainsOne;
 
 use Atk4\Data\Model;
+use Atk4\Data\Model2;
 
 /**
  * Address model.
@@ -15,7 +16,7 @@ use Atk4\Data\Model;
  * @property string[]  $tags       @Atk4\Field()
  * @property DoorCode  $door_code  @Atk4\RefOne()
  */
-class Address extends Model
+class Address extends Model2
 {
     protected function init(): void
     {

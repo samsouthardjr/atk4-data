@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Atk4\Data\Tests\ContainsMany;
 
-use Atk4\Data\Model;
+use Atk4\Data\Model2;
 
 /**
  * Each line can have multiple discounts.
@@ -12,7 +12,7 @@ use Atk4\Data\Model;
  * @property int       $percent    @Atk4\Field()
  * @property \DateTime $valid_till @Atk4\Field()
  */
-class Discount extends Model
+class Discount extends Model2
 {
     protected function init(): void
     {

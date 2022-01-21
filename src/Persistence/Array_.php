@@ -7,6 +7,7 @@ namespace Atk4\Data\Persistence;
 use Atk4\Data\Exception;
 use Atk4\Data\Field;
 use Atk4\Data\Model;
+use Atk4\Data\Model2;
 use Atk4\Data\Persistence;
 use Atk4\Data\Persistence\Array_\Action;
 use Atk4\Data\Persistence\Array_\Action\RenameColumnIterator;
@@ -75,7 +76,7 @@ class Array_ extends Persistence
                     return $join->foreign_table;
                 }, null, Array_\Join::class)();
                 if (isset($this->seedData[$joinTableName])) {
-                    $dummyJoinModel = new Model($this, ['table' => $joinTableName]);
+                    $dummyJoinModel = new Model2($this, ['table' => $joinTableName]);
                     $this->add($dummyJoinModel);
                 }
             }

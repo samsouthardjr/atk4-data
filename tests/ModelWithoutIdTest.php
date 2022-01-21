@@ -6,6 +6,7 @@ namespace Atk4\Data\Tests;
 
 use Atk4\Data\Exception;
 use Atk4\Data\Model;
+use Atk4\Data\Model2;
 use Atk4\Data\Schema\TestCase;
 use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 
@@ -28,7 +29,7 @@ class ModelWithoutIdTest extends TestCase
             ],
         ]);
 
-        $this->m = new Model($this->db, ['table' => 'user', 'id_field' => false]);
+        $this->m = new Model2($this->db, ['table' => 'user', 'id_field' => false]);
 
         $this->m->addFields(['name', 'gender']);
     }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Atk4\Data\Tests\Persistence;
 
 use Atk4\Core\Phpunit\TestCase;
-use Atk4\Data\Model;
+use Atk4\Data\Model2;
 use Atk4\Data\Persistence;
 
 class StaticTest extends TestCase
@@ -15,12 +15,12 @@ class StaticTest extends TestCase
         $p = new Persistence\Static_([1 => 'hello', 'world']);
 
         // default title field
-        $m = new Model($p);
+        $m = new Model2($p);
         $m = $m->load(2);
         $this->assertSame('world', $m->get('name'));
 
         // custom title field and try loading from same static twice
-        $m = new Model($p); // , ['title_field' => 'foo']);
+        $m = new Model2($p); // , ['title_field' => 'foo']);
         $m = $m->load(2);
         $this->assertSame('world', $m->get('name')); // still 'name' here not 'foo'
     }
@@ -28,7 +28,7 @@ class StaticTest extends TestCase
     public function testArrayOfArrays(): void
     {
         $p = new Persistence\Static_([1 => ['hello', 'xx', true], ['world', 'xy', false]]);
-        $m = new Model($p);
+        $m = new Model2($p);
 
         $m = $m->load(2);
 
@@ -40,7 +40,7 @@ class StaticTest extends TestCase
     public function testArrayOfHashes(): void
     {
         $p = new Persistence\Static_([1 => ['foo' => 'hello'], ['foo' => 'world']]);
-        $m = new Model($p);
+        $m = new Model2($p);
 
         $m = $m->load(2);
 
@@ -50,7 +50,7 @@ class StaticTest extends TestCase
     public function testIdArg(): void
     {
         $p = new Persistence\Static_([['id' => 20, 'foo' => 'hello'], ['id' => 21, 'foo' => 'world']]);
-        $m = new Model($p);
+        $m = new Model2($p);
 
         $m = $m->load(21);
 
@@ -60,7 +60,7 @@ class StaticTest extends TestCase
     public function testIdKey(): void
     {
         $p = new Persistence\Static_([20 => ['foo' => 'hello'], 21 => ['foo' => 'world']]);
-        $m = new Model($p);
+        $m = new Model2($p);
 
         $m = $m->load(21);
 
@@ -70,7 +70,7 @@ class StaticTest extends TestCase
     public function testZeroIdAllowed(): void
     {
         $p = new Persistence\Static_(['hello', 'world']);
-        $m = new class($p) extends Model {
+        $m = new class($p) extends Model2 {
             protected function init(): void
             {
                 parent::init();
@@ -90,13 +90,13 @@ class StaticTest extends TestCase
 
         $this->expectException(\Atk4\Data\Exception::class);
         $this->expectExceptionMessage('Must not be a zero');
-        $m = new Model($p);
+        $m = new Model2($p);
     }
 
     public function testEmpty(): void
     {
         $p = new Persistence\Static_([]);
-        $m = new Model($p);
+        $m = new Model2($p);
 
         $m = $m->tryLoadAny();
 
@@ -118,15 +118,15 @@ class StaticTest extends TestCase
     public function testTitleOrName(): void
     {
         $p = new Persistence\Static_([1 => ['foo' => 'hello', 'bar' => 'world']]);
-        $m = new Model($p);
+        $m = new Model2($p);
         $this->assertSame('foo', $m->title_field);
 
         $p = new Persistence\Static_([1 => ['foo' => 'hello', 'name' => 'x']]);
-        $m = new Model($p);
+        $m = new Model2($p);
         $this->assertSame('name', $m->title_field);
 
         $p = new Persistence\Static_([1 => ['foo' => 'hello', 'title' => 'x']]);
-        $m = new Model($p);
+        $m = new Model2($p);
         $this->assertSame('title', $m->title_field);
     }
 
@@ -143,7 +143,7 @@ class StaticTest extends TestCase
             'test_str_2' => '123',
             'test_str_3' => '123.45',
         ]]);
-        $m = new Model($p);
+        $m = new Model2($p);
 
         $this->assertSame('integer', $m->getField('id')->type);
         $this->assertSame('integer', $m->getField('test_int')->type);
@@ -162,7 +162,7 @@ class StaticTest extends TestCase
     public function testFieldTypesBasicInteger(): void
     {
         $p = new Persistence\Static_([1 => 'hello', 'world']);
-        $m = new Model($p);
+        $m = new Model2($p);
 
         $this->assertSame('integer', $m->getField('id')->type);
         $this->assertSame('string', $m->getField('name')->type);
@@ -171,14 +171,14 @@ class StaticTest extends TestCase
     public function testFieldTypesBasicString(): void
     {
         $p = new Persistence\Static_(['test' => 'hello', 10 => 'world']);
-        $m = new Model($p);
+        $m = new Model2($p);
 
         $this->assertSame('string', $m->getField('id')->type);
         $this->assertSame('string', $m->getField('name')->type);
     }
 }
 
-class StaticTestModel extends Model
+class StaticTestModel extends Model2
 {
     public $title_field = 'foo';
 

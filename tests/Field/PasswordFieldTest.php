@@ -6,14 +6,14 @@ namespace Atk4\Data\Tests\Field;
 
 use Atk4\Data\Exception;
 use Atk4\Data\Field\PasswordField;
-use Atk4\Data\Model;
+use Atk4\Data\Model2;
 use Atk4\Data\Schema\TestCase;
 
 class PasswordFieldTest extends TestCase
 {
     public function testPasswordFieldBasic(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('p', [PasswordField::class]);
         $field = PasswordField::assertInstanceOf($m->getField('p'));
         $entity = $m->createEntity();
@@ -82,7 +82,7 @@ class PasswordFieldTest extends TestCase
 
     public function testSetUnhashedException(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('p', [PasswordField::class]);
         $field = PasswordField::assertInstanceOf($m->getField('p'));
         $entity = $m->createEntity();
@@ -93,7 +93,7 @@ class PasswordFieldTest extends TestCase
 
     public function testEmptyCompareException(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('p', [PasswordField::class]);
         $field = PasswordField::assertInstanceOf($m->getField('p'));
         $entity = $m->createEntity();

@@ -41,7 +41,7 @@ parameters:
         - '~^Access to an undefined property Atk4\\Data\\Persistence::\$connection\.$~'
         - '~^Call to an undefined method Atk4\\Data\\Persistence::dsql\(\)\.$~'
         # for src/Field/SqlExpressionField.php
-        - '~^Call to an undefined method Atk4\\Data\\Model::expr\(\)\.$~'
+        - '~^Call to an undefined method Atk4\\Data\\Model2?::expr\(\)\.$~'
         # for src/Model.php
         - '~^Call to an undefined method Atk4\\Data\\Persistence::export\(\)\.$~'
         - '~^Call to an undefined method Atk4\\Data\\Persistence::prepareIterator\(\)\.$~'
@@ -52,7 +52,7 @@ parameters:
         - '~^Call to an undefined method Atk4\\Data\\Persistence::expr\(\)\.$~'
         - '~^Call to an undefined method Atk4\\Data\\Persistence::exprNow\(\)\.$~'
         # for src/Reference/HasMany.php
-        - '~^Call to an undefined method Atk4\\Data\\Model::dsql\(\)\.$~'
+        - '~^Call to an undefined method Atk4\\Data\\Model2?::dsql\(\)\.$~'
         # for tests/FieldTest.php
         - '~^Call to an undefined method Atk4\\Data\\Reference\\HasOne::addTitle\(\)\.$~'
         # for tests/JoinSqlTest.php

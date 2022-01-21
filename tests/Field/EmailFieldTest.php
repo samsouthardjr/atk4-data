@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Atk4\Data\Tests\Field;
 
 use Atk4\Data\Field\EmailField;
-use Atk4\Data\Model;
+use Atk4\Data\Model2;
 use Atk4\Data\Schema\TestCase;
 use Atk4\Data\ValidationException;
 
@@ -13,7 +13,7 @@ class EmailFieldTest extends TestCase
 {
     public function testEmailFieldBasic(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('email', [EmailField::class]);
         $entity = $m->createEntity();
 
@@ -39,7 +39,7 @@ class EmailFieldTest extends TestCase
 
     public function testEmailValidateDns(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('email', [EmailField::class, 'dns_check' => true]);
         $m->addField('email_idn', [EmailField::class, 'dns_check' => true]);
         $entity = $m->createEntity();
@@ -56,7 +56,7 @@ class EmailFieldTest extends TestCase
 
     public function testEmailWithName(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('email', [EmailField::class]);
         $m->addField('email_name', [EmailField::class, 'allow_name' => true]);
         $entity = $m->createEntity();
@@ -71,7 +71,7 @@ class EmailFieldTest extends TestCase
 
     public function testEmailMultipleException(): void
     {
-        $m = new Model();
+        $m = new Model2();
         $m->addField('email', [EmailField::class]);
         $entity = $m->createEntity();
 

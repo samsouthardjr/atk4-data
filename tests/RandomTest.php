@@ -8,6 +8,7 @@ use Atk4\Core\Exception as CoreException;
 use Atk4\Data\Exception;
 use Atk4\Data\Field;
 use Atk4\Data\Model;
+use Atk4\Data\Model2;
 use Atk4\Data\Persistence;
 use Atk4\Data\Persistence\Sql\Expression;
 use Atk4\Data\Persistence\Sql\Query;
@@ -17,7 +18,7 @@ use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\DBAL\Platforms\SqlitePlatform;
 use Doctrine\DBAL\Platforms\SQLServerPlatform;
 
-class Model_Rate extends Model
+class Model_Rate extends Model2
 {
     public $table = 'rate';
 
@@ -29,7 +30,7 @@ class Model_Rate extends Model
         $this->addField('ask', ['type' => 'float']);
     }
 }
-class Model_Item extends Model
+class Model_Item extends Model2
 {
     public $table = 'item';
 
@@ -41,7 +42,7 @@ class Model_Item extends Model
             ->addTitle();
     }
 }
-class Model_Item2 extends Model
+class Model_Item2 extends Model2
 {
     public $table = 'item';
 
@@ -54,7 +55,7 @@ class Model_Item2 extends Model
             ->addTitle();
     }
 }
-class Model_Item3 extends Model
+class Model_Item3 extends Model2
 {
     public $table = 'item';
 
@@ -99,7 +100,7 @@ class RandomTest extends TestCase
             ],
         ]);
 
-        $m = new Model($this->db, ['table' => 'user']);
+        $m = new Model2($this->db, ['table' => 'user']);
         $m->addFields(['name', 'salary' => ['default' => 10]]);
 
         $m->import([['name' => 'Peter'], ['name' => 'Steve', 'salary' => 30]]);
@@ -124,7 +125,7 @@ class RandomTest extends TestCase
             ],
         ]);
 
-        $m = new Model($this->db, ['table' => 'user']);
+        $m = new Model2($this->db, ['table' => 'user']);
         $m->addFields(['name', 'login'], ['default' => 'unknown']);
 
         $m->insert(['name' => 'Peter']);
@@ -147,7 +148,7 @@ class RandomTest extends TestCase
             ],
         ]);
 
-        $m = new Model($this->db, ['table' => 'user']);
+        $m = new Model2($this->db, ['table' => 'user']);
         $m->addFields(['name'], ['default' => 'anonymous']);
         $m->addFields([
             'last_name',
@@ -243,7 +244,7 @@ class RandomTest extends TestCase
         $p = new Persistence\Static_([1 => 'hello', 'world']);
 
         // default title field
-        $m = new Model($p);
+        $m = new Model2($p);
         $m->addExpression('caps', ['expr' => function ($m) {
             return strtoupper($m->get('name'));
         }]);
@@ -263,7 +264,7 @@ class RandomTest extends TestCase
             ],
         ]);
 
-        $m = new Model($this->db, ['table' => 'item']);
+        $m = new Model2($this->db, ['table' => 'item']);
         $m->addField('name');
         $m = $m->load(2);
 
@@ -308,7 +309,7 @@ class RandomTest extends TestCase
             ],
         ]);
 
-        $m = new Model($this->db, ['table' => 'never_used']);
+        $m = new Model2($this->db, ['table' => 'never_used']);
         $m->addField('name');
 
         $m->onHook(Model::HOOK_BEFORE_SAVE, static function (Model $m) {
@@ -413,12 +414,12 @@ class RandomTest extends TestCase
         ]);
 
         // model without id field
-        $m1 = new Model($this->db, ['table' => 'user', 'id_field' => false]);
+        $m1 = new Model2($this->db, ['table' => 'user', 'id_field' => false]);
         $m1->addField('code', ['type' => 'integer']);
         $m1->addField('name');
 
         // model with id field
-        $m2 = new Model($this->db, ['table' => 'user']);
+        $m2 = new Model2($this->db, ['table' => 'user']);
         $m2->addField('code', ['type' => 'integer']);
         $m2->addField('name');
 
@@ -549,10 +550,10 @@ class RandomTest extends TestCase
             }
         }
 
-        $user = new Model($this->db, ['table' => $userSchema . '.user']);
+        $user = new Model2($this->db, ['table' => $userSchema . '.user']);
         $user->addField('name');
 
-        $doc = new Model($this->db, ['table' => $docSchema . '.doc']);
+        $doc = new Model2($this->db, ['table' => $docSchema . '.doc']);
         $doc->addField('name');
         $doc->hasOne('user_id', ['model' => $user])->addTitle();
         $doc->addCondition('user', 'Sarah');
