@@ -551,7 +551,7 @@ class Sql extends Persistence
 
         try {
             $model->hook(self::HOOK_BEFORE_INSERT_QUERY, [$insert]);
-            $c = $insert->execute()->rowCount();
+            $c = $insert->executeStatement();
         } catch (SqlException $e) {
             throw (new Exception('Unable to execute insert query', 0, $e))
                 ->addMoreInfo('model', $model)
@@ -584,7 +584,7 @@ class Sql extends Persistence
         $model->hook(self::HOOK_BEFORE_UPDATE_QUERY, [$update]);
 
         try {
-            $c = $update->execute()->rowCount();
+            $c = $update->executeStatement();
         } catch (SqlException $e) {
             throw (new Exception('Unable to update due to query error', 0, $e))
                 ->addMoreInfo('model', $model)
@@ -622,7 +622,7 @@ class Sql extends Persistence
         $model->hook(self::HOOK_BEFORE_DELETE_QUERY, [$delete]);
 
         try {
-            $c = $delete->execute()->rowCount();
+            $c = $delete->executeStatement();
         } catch (SqlException $e) {
             throw (new Exception('Unable to delete due to query error', 0, $e))
                 ->addMoreInfo('model', $model)
