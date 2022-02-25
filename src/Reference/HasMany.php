@@ -47,10 +47,15 @@ class HasMany extends Reference
     {
         $ourModel = $this->getOurModel($ourModel);
 
-        if ($ourModel->isEntity() && $ourModel->isLoaded()) {
-            return $this->our_field
-                ? $ourModel->get($this->our_field)
-                : $ourModel->getId();
+        if ($ourModel->isEntity()) {
+            $ourValue = $this->our_field ? $ourModel->get($this->our_field) : $ourModel->getId();
+
+            // assert value is loaded
+            if ($ourValue === null) {
+                $ourModel->getField($this->our_field ?: $ourModel->id_field)->normalize($ourValue);
+            }
+
+            return $ourValue;
         }
 
         // create expression based on existing conditions
