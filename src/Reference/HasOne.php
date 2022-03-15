@@ -104,7 +104,6 @@ class HasOne extends Reference
         $theirModel->getModel(true)->reload_after_save = false;
 
         $this->onHookToTheirModel($theirModel, Model::HOOK_AFTER_SAVE, function (Model $theirModel) use ($ourModel) {
-            $theirModel->assertIsLoaded();
             $theirValue = $this->their_field ? $theirModel->get($this->their_field) : $theirModel->getId();
 
             if (!$this->getOurField()->compare($this->getOurFieldValue($ourModel), $theirValue)) {
