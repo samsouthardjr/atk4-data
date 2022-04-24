@@ -181,7 +181,7 @@ jobs:
 
       - name: "Run PHP src tests"
         run: |
-          git clone -q https://github.com/mvorisek/php-src.git -b oracle_ci_debug
+          git clone -q https://github.com/mvorisek/php-src.git --depth 1 -b oracle_ci_debug
           export PHP_OCI8_TEST_USER="system"
           export PHP_OCI8_TEST_PASS="atk4_pass"
           export PHP_OCI8_TEST_DB="oracle/xe"
