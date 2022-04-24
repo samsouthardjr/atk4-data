@@ -188,7 +188,7 @@ jobs:
           export PDO_OCI_TEST_USER="system"
           export PDO_OCI_TEST_PASS="atk4_pass"
           export PDO_OCI_TEST_DSN="oci:dbname=oracle/xe;charset=AL32UTF8"
-          cd php-src && run-tests.php -P -q -g FAIL,XFAIL,BORK,WARN,LEAK,XLEAK,SKIP --show-diff --show-slow 1000 --set-timeout 120
+          cd php-src && ./run-tests.php -P -q -g FAIL,XFAIL,BORK,WARN,LEAK,XLEAK,SKIP --show-diff --show-slow 1000 --set-timeout 120
 
       - name: "Run tests: Oracle - PDO (only for coverage or cron)"
         if: env.LOG_COVERAGE || github.event_name == 'schedule'
