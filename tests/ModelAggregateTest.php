@@ -177,9 +177,15 @@ class ModelAggregateTest extends TestCase
             10
         );
 
-        $this->assertSame([
-            ['client' => 'Vinny', 'client_id' => 1, 's' => 19.0, 'amount' => 19.0, 'double' => 38.0],
-        ], $aggregate->export());
+        try {
+            $GLOBALS['debug'] = true;
+
+            $this->assertSame([
+                ['client' => 'Vinny', 'client_id' => 1, 's' => 19.0, 'amount' => 19.0, 'double' => 38.0],
+            ], $aggregate->export());
+        } finally {
+            $GLOBALS['debug'] = false;
+        }
     }
 
     public function testGroupSelectCondition3(): void
