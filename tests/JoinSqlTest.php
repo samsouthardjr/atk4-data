@@ -99,7 +99,7 @@ class JoinSqlTest extends TestCase
         ]);
         $m_u->addField('name');
         $j = $m_u->join('contact.test_id');
-        $j->addFields(['contact_phone']);
+        $j->addField('contact_phone');
 
         $m_u2 = $m_u->createEntity();
         $m_u2->set('name', 'John');
@@ -460,7 +460,7 @@ class JoinSqlTest extends TestCase
         $j = $m_u->join('contact');
         $j->addField('contact_phone');
         $c = $j->join('country');
-        $c->addFields(['country_name' => ['actual' => 'name']]);
+        $c->addField('country_name', ['actual' => 'name']);
 
         $m_u2 = $m_u->load(10);
         $m_u2->delete();

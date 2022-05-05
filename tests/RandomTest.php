@@ -100,7 +100,8 @@ class RandomTest extends TestCase
         ]);
 
         $m = new Model($this->db, ['table' => 'user']);
-        $m->addFields(['name', 'salary' => ['default' => 10]]);
+        $m->addField('name');
+        $m->addField('salary', ['default' => 10]);
 
         $m->import([['name' => 'Peter'], ['name' => 'Steve', 'salary' => 30]]);
         $m->insert(['name' => 'Sue']);
@@ -125,7 +126,8 @@ class RandomTest extends TestCase
         ]);
 
         $m = new Model($this->db, ['table' => 'user']);
-        $m->addFields(['name', 'login'], ['default' => 'unknown']);
+        $m->addField('name', ['default' => 'unknown']);
+        $m->addField('login', ['default' => 'unknown']);
 
         $m->insert(['name' => 'Peter']);
         $m->insert([]);
@@ -148,14 +150,12 @@ class RandomTest extends TestCase
         ]);
 
         $m = new Model($this->db, ['table' => 'user']);
-        $m->addFields(['name'], ['default' => 'anonymous']);
-        $m->addFields([
-            'last_name',
-            'login' => ['default' => 'unknown'],
-            'salary' => [CustomField::class, 'type' => 'atk4_money', 'default' => 100],
-            'tax' => [CustomField::class, 'type' => 'atk4_money', 'default' => 20],
-            'vat' => new CustomField(['type' => 'atk4_money', 'default' => 15]),
-        ]);
+        $m->addField('name', ['default' => 'anonymous']);
+        $m->addField('last_name');
+        $m->addField('login', ['default' => 'unknown']);
+        $m->addField('salary', [CustomField::class, 'type' => 'atk4_money', 'default' => 100]);
+        $m->addField('tax', [CustomField::class, 'type' => 'atk4_money', 'default' => 20]);
+        $m->addField('vat', new CustomField(['type' => 'atk4_money', 'default' => 15]));
 
         $m->insert([]);
 

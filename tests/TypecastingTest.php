@@ -369,9 +369,13 @@ class TypecastingTest extends TestCase
     public function testTypecastTimezone(): void
     {
         $m = new Model($this->db, ['table' => 'event']);
-        $dt = $m->addField('dt', ['type' => 'datetime', 'persist_timezone' => 'EEST']);
-        $d = $m->addField('d', ['type' => 'date', 'persist_timezone' => 'EEST']);
-        $t = $m->addField('t', ['type' => 'time', 'persist_timezone' => 'EEST']);
+        $m->addField('dt', ['type' => 'datetime', 'persist_timezone' => 'EEST']);
+        $m->addField('d', ['type' => 'date', 'persist_timezone' => 'EEST']);
+        $m->addField('t', ['type' => 'time', 'persist_timezone' => 'EEST']);
+
+        $dt = $m->getField('dt');
+        $d = $m->getField('d');
+        $t = $m->getField('t');
 
         date_default_timezone_set('UTC');
         $s = new \DateTime('Monday, 15-Aug-05 22:52:01 UTC');

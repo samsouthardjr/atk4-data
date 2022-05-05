@@ -13,19 +13,19 @@ use Atk4\Data\Reference;
  */
 trait ReferencesTrait
 {
-    /** @var array The seed used by addRef() method. */
+    /** @var array */
     public $_default_seed_addRef = [Reference::class];
 
-    /** @var array The seed used by hasOne() method. */
+    /** @var array */
     public $_default_seed_hasOne = [Reference\HasOne::class];
 
-    /** @var array The seed used by hasMany() method. */
+    /** @var array */
     public $_default_seed_hasMany = [Reference\HasMany::class];
 
-    /** @var array The seed used by containsOne() method. */
+    /** @var array */
     public $_default_seed_containsOne = [Reference\ContainsOne::class];
 
-    /** @var array The seed used by containsMany() method. */
+    /** @var array */
     public $_default_seed_containsMany = [Reference\ContainsMany::class];
 
     /**

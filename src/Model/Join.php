@@ -5,11 +5,9 @@ declare(strict_types=1);
 namespace Atk4\Data\Model;
 
 use Atk4\Core\DiContainerTrait;
-use Atk4\Core\Factory;
 use Atk4\Core\InitializerTrait;
 use Atk4\Core\TrackableTrait;
 use Atk4\Data\Exception;
-use Atk4\Data\Field;
 use Atk4\Data\Model;
 use Atk4\Data\Reference;
 

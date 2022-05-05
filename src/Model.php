@@ -106,10 +106,10 @@ class Model implements \IteratorAggregate
     /** @var array<string, true> */
     private static $_modelOnlyProperties;
 
-    /** @var string|array The class used by addField() method. */
+    /** @var string|array */
     public $_default_seed_addField = [Field::class];
 
-    /** @var string|array The class used by addExpression() method. */
+    /** @var string|array */
     public $_default_seed_addExpression = [CallbackField::class];
 
     /** @var array<string, Field> */
