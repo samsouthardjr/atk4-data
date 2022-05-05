@@ -101,10 +101,11 @@ class HasMany extends Reference
     }
 
     /**
-     * Adds field as expression to our model.
-     * Used in aggregate strategy.
+     * Adds field as expression to our model. Used in aggregate strategy.
+     *
+     * @return $this
      */
-    public function addField(string $fieldName, array $defaults = []): Field
+    public function addField(string $fieldName, array $defaults = [])
     {
         if (!isset($defaults['aggregate']) && !isset($defaults['concat']) && !isset($defaults['expr'])) {
             throw (new Exception('Aggregate field requires "aggregate", "concat" or "expr" specified to hasMany()->addField()'))
@@ -151,26 +152,7 @@ class HasMany extends Reference
             };
         }
 
-        return $this->getOurModel(null)->addExpression($fieldName, array_merge($defaults, ['expr' => $fx]));
-    }
-
-    /**
-     * Adds multiple fields.
-     *
-     * @see addField()
-     *
-     * @return $this
-     */
-    public function addFields(array $fields = [])
-    {
-        foreach ($fields as $name => $seed) {
-            if (is_int($name)) {
-                $name = $seed;
-                $seed = [];
-            }
-
-            $this->addField($name, $seed);
-        }
+        $this->getOurModel(null)->addExpression($fieldName, array_merge($defaults, ['expr' => $fx]));
 
         return $this;
     }

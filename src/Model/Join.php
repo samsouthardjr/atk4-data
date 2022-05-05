@@ -281,29 +281,14 @@ abstract class Join
      * Adding field into join will automatically associate that field
      * with this join. That means it won't be loaded from $table, but
      * form the join instead.
-     */
-    public function addField(string $name, array $seed = []): Field
-    {
-        $seed['joinName'] = $this->shortName;
-
-        return $this->getOwner()->addField($this->prefix . $name, $seed);
-    }
-
-    /**
-     * Adds multiple fields.
      *
      * @return $this
      */
-    public function addFields(array $fields = [], array $defaults = [])
+    public function addField(string $name, array $seed = [])
     {
-        foreach ($fields as $name => $seed) {
-            if (is_int($name)) {
-                $name = $seed;
-                $seed = [];
-            }
+        $seed['joinName'] = $this->shortName;
 
-            $this->addField($name, Factory::mergeSeeds($seed, $defaults));
-        }
+        $this->getOwner()->addField($this->prefix . $name, $seed);
 
         return $this;
     }
