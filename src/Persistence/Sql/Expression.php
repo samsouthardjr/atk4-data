@@ -694,6 +694,20 @@ class Expression implements Expressionable, \ArrayAccess
             }, $row);
         }
 
+        $skipDump = class_exists(\Atk4\Ui\App::class, false);
+        $tc = null;
+        foreach (debug_backtrace(\DEBUG_BACKTRACE_PROVIDE_OBJECT) as $trace) {
+            if (($trace['object'] ?? null) instanceof \Atk4\Data\Schema\TestCase) {
+                $tc = $trace['object'];
+            } elseif (isset($trace['object']) && preg_match('~^Mvorisek\\\\Atk4\\\\Hintable\\\\Tests\\\\Data\\\\HintableModelSqlTest$~', get_class($trace['object']))) {
+                $skipDump = true;
+            }
+        }
+
+        if (!$skipDump && $tc->debug) {
+            var_dump($rows);
+        }
+
         return $rows;
     }
 

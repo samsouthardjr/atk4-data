@@ -343,6 +343,32 @@ abstract class Persistence
                 throw new Exception('Unexpected non-scalar value');
             }
 
+            if ($this instanceof Persistence\Sql) {
+                $isMysql = $this->getDatabasePlatform() instanceof Platforms\MySQLPlatform;
+                $isMssql = $this->getDatabasePlatform() instanceof Platforms\SQLServerPlatform;
+                $isOracle = $this->getDatabasePlatform() instanceof Platforms\OraclePlatform;
+
+                if (is_bool($value)) { // needed for PostgreSQL
+                    if ($isMssql || $isOracle) { // (1 = 0) is not supported as insert value
+                        return $value ? '1' : '0';
+                    }
+
+                    return new Persistence\Sql\Expression($value ? '(1 = 1)' : '(1 = 0)');
+                } elseif (is_int($value) || is_float($value)) {
+                    if ($isMysql
+                        || $isOracle
+                        || $isMssql) { // there is no CAST AS NUMERIC
+                        if (is_float($value) && ($isMssql || $isOracle)) {
+                            return new Persistence\Sql\Expression('CAST([] AS FLOAT)', [$v]); // CAST(v AS FLOAT) not supported by MySQL
+                        }
+
+                        return new Persistence\Sql\Expression('([] + 0)', [$v]);
+                    }
+
+                    return new Persistence\Sql\Expression('CAST([] AS NUMERIC)', [$v]);
+                }
+            }
+
             return $v;
         } catch (\Exception $e) {
             throw (new Exception('Typecast save error', 0, $e))
@@ -354,7 +380,7 @@ abstract class Persistence
      * Cast specific field value from the way how it's stored inside
      * persistence to a PHP format.
      *
-     * @param scalar|null $value
+     * @param scalar|Persistence\Sql\Expression|null $value
      *
      * @return mixed
      */
@@ -362,6 +388,21 @@ abstract class Persistence
     {
         if ($value === null) {
             return null;
+        } elseif ($value instanceof Persistence\Sql\Expression
+                && in_array(\Closure::bind(fn () => $value->template, null, Persistence\Sql\Expression::class)(), ['CAST([] AS NUMERIC)', 'CAST([] AS FLOAT)', '([])', '([] + 0)', '([] + 0.0)'], true)
+                && array_keys($value->args) === ['custom']
+                && array_keys($value->args['custom']) === [0]) {
+            return $value->args['custom'][0];
+        } elseif ($value instanceof Persistence\Sql\Expression
+                && \Closure::bind(fn () => $value->template, null, Persistence\Sql\Expression::class)() === '(1 = 1)'
+                && array_keys($value->args) === ['custom']
+                && array_keys($value->args['custom']) === []) {
+            return true;
+        } elseif ($value instanceof Persistence\Sql\Expression
+                && \Closure::bind(fn () => $value->template, null, Persistence\Sql\Expression::class)() === '(1 = 0)'
+                && array_keys($value->args) === ['custom']
+                && array_keys($value->args['custom']) === []) {
+            return false;
         } elseif (!is_scalar($value)) {
             throw new Exception('Unexpected non-scalar value');
         }

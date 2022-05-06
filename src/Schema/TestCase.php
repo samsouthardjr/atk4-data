@@ -275,7 +275,7 @@ abstract class TestCase extends BaseTestCase
                     $migrator->field($field, ['type' => $fieldType]);
                 }
 
-                $migrator->create();
+                $migrator->dropIfExists()->create();
             }
 
             // import data

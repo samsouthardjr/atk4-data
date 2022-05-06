@@ -366,6 +366,14 @@ class Field implements Expressionable
             return null;
         }
 
+        if (is_bool($value)) {
+            return $value ? '1' : '0';
+        } elseif (is_int($value)) {
+            return (string) $value;
+        } elseif (is_float($value)) {
+            return Expression::castFloatToString($value);
+        }
+
         $res = $this->typecastSaveField($value, true);
         if (is_float($res)) {
             return Expression::castFloatToString($res);
